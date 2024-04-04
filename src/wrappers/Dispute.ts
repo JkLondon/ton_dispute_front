@@ -1,1 +1,1 @@
-export * from '../build/Dispute/tact_Dispute';
+export * from '../../build/Dispute/tact_Dispute';
