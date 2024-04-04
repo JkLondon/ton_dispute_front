@@ -1,0 +1,163 @@
+#pragma version =0.4.3;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+#include "tact_PlayerBet.headers.fc";
+#include "tact_PlayerBet.stdlib.fc";
+#include "tact_PlayerBet.constants.fc";
+#include "tact_PlayerBet.storage.fc";
+
+;;
+;; Contract PlayerBet functions
+;;
+
+(slice, int, int, int, slice, int) $PlayerBet$_contract_init(slice $parent, int $seqno) impure inline_ref {
+    var (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal)) = (null(), null(), 0, 0, __gen_slice_address_61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c(), 20000000);
+    $self'parent = $parent;
+    $self'seqno = $seqno;
+    return ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal);
+}
+
+((slice, int, int, int, slice, int), (int, int, slice, int)) $PlayerBet$_fun_details((slice, int, int, int, slice, int) $self) impure inline_ref {
+    var (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal)) = $self;
+    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal), $WinBetDetails$_constructor_outcomeID_amount_playerAddress_seqno($self'outcomeID, $self'amount, $self'playerAddress, $self'seqno));
+}
+
+;;
+;; Receivers of a Contract PlayerBet
+;;
+
+(((slice, int, int, int, slice, int)), ()) $PlayerBet$_internal_binary_InternalSetBet((slice, int, int, int, slice, int) $self, (int, int, slice) $msg) impure inline {
+    var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal) = $self;
+    var ($msg'outcomeID, $msg'amount, $msg'playerAddress) = $msg;
+    throw_unless(54404, ( __tact_slice_eq_bits($self'parent, __tact_context_get_sender()) ));
+    $self'outcomeID = $msg'outcomeID;
+    $self'amount = $msg'amount;
+    $self'playerAddress = $msg'playerAddress;
+    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal), ());
+}
+
+(((slice, int, int, int, slice, int)), ()) $PlayerBet$_internal_binary_CloseWinBet((slice, int, int, int, slice, int) $self, (int) $msg) impure inline {
+    var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal) = $self;
+    var ($msg'outcomeID) = $msg;
+    throw_unless(54404, ( __tact_slice_eq_bits($self'parent, __tact_context_get_sender()) ));
+    if (($self'outcomeID == $msg'outcomeID)) {
+        $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'parent, 0, true, (128 + 2), $WinBetDetails$_store_cell($WinBetDetails$_constructor_outcomeID_amount_playerAddress_seqno($self'outcomeID, $self'amount, $self'playerAddress, $self'seqno))));
+    } else {
+        $global_send($SendParameters$_constructor_to_value_bounce_mode($self'parent, 0, true, (128 + 2)));
+    }
+    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal), ());
+}
+
+(((slice, int, int, int, slice, int)), ()) $PlayerBet$_internal_binary_CloseDrawBet((slice, int, int, int, slice, int) $self, (int) $msg) impure inline {
+    var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal) = $self;
+    var ($msg'id) = $msg;
+    throw_unless(54404, ( __tact_slice_eq_bits($self'parent, __tact_context_get_sender()) ));
+    $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'parent, 0, true, (128 + 2), $DrawBetDetails$_store_cell($DrawBetDetails$_constructor_outcomeID_amount_playerAddress_seqno($self'outcomeID, $self'amount, $self'playerAddress, $self'seqno))));
+    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal), ());
+}
+
+(((slice, int, int, int, slice, int)), ()) $PlayerBet$_internal_binary_Deploy((slice, int, int, int, slice, int) $self, (int) $deploy) impure inline {
+    var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal) = $self;
+    var ($deploy'queryId) = $deploy;
+    ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal)~$PlayerBet$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal), ());
+}
+
+;;
+;; Get methods of a Contract PlayerBet
+;;
+
+_ %details() method_id(118890) {
+    var self = $PlayerBet$_contract_load();
+    var res = self~$PlayerBet$_fun_details();
+    return $WinBetDetails$_to_external(res);
+}
+
+_ supported_interfaces() method_id {
+    return (
+        "org.ton.introspection.v0"H >> 128,
+        "org.ton.abi.ipfs.v0"H >> 128,
+        "org.ton.deploy.lazy.v0"H >> 128,
+        "org.ton.chain.workchain.v0"H >> 128
+    );
+}
+
+_ get_abi_ipfs() method_id {
+    return "ipfs://QmVbMaRQjGBDb6s72t8QAREAHkgurusbgdGj42TwX42mmf";
+}
+
+_ lazy_deployment_completed() method_id {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract PlayerBet
+;;
+
+((slice, int, int, int, slice, int), int) $PlayerBet$_contract_router_internal((slice, int, int, int, slice, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    
+    ;; Receive InternalSetBet message
+    if (op == 3040150061) {
+        var msg = in_msg~$InternalSetBet$_load();
+        self~$PlayerBet$_internal_binary_InternalSetBet(msg);
+        return (self, true);
+    }
+    
+    ;; Receive CloseWinBet message
+    if (op == 2815938965) {
+        var msg = in_msg~$CloseWinBet$_load();
+        self~$PlayerBet$_internal_binary_CloseWinBet(msg);
+        return (self, true);
+    }
+    
+    ;; Receive CloseDrawBet message
+    if (op == 2880472030) {
+        var msg = in_msg~$CloseDrawBet$_load();
+        self~$PlayerBet$_internal_binary_CloseDrawBet(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Deploy message
+    if (op == 2490013878) {
+        var msg = in_msg~$Deploy$_load();
+        self~$PlayerBet$_internal_binary_Deploy(msg);
+        return (self, true);
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = -(msg_flags & 1);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $PlayerBet$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$PlayerBet$_contract_router_internal(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(130, handled);
+    
+    ;; Persist state
+    $PlayerBet$_contract_store(self);
+}
