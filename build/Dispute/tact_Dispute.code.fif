@@ -16,10 +16,9 @@ PROGRAM{
   DECLPROC __tact_dict_get_code
   DECLPROC __tact_string_builder_start
   DECLPROC __tact_string_builder_start_comment
-  DECLPROC __tact_string_builder_start_string
   DECLPROC __tact_string_builder_end
-  DECLPROC __tact_string_builder_end_slice
   DECLPROC __tact_string_builder_append
+  DECLPROC __tact_int_to_string
   DECLPROC __tact_float_to_string
   DECLPROC $Deploy$_load
   DECLPROC $DeployOk$_store
@@ -30,9 +29,8 @@ PROGRAM{
   DECLPROC $DrawBetDetails$_load
   DECLPROC $CloseWinBet$_store
   DECLPROC $CloseWinBet$_store_cell
-  DECLPROC $CloseDrawBet$_store
-  DECLPROC $CloseDrawBet$_store_cell
   DECLPROC $Vote$_load
+  DECLPROC $Claim$_load
   DECLPROC $PlayerBetInit$_load
   DECLPROC $InitialState$_load
   DECLPROC $Outcome$_store
@@ -52,6 +50,7 @@ PROGRAM{
   DECLPROC $Outcome$_not_null
   DECLPROC $Referee$_not_null
   DECLPROC $Fees$_to_external
+  DECLPROC $TimeSettings$_to_external
   DECLPROC $PlayerBet$init$_store
   DECLPROC $Dispute$init$_load
   DECLPROC $Dispute$_contract_init
@@ -63,11 +62,6 @@ PROGRAM{
   DECLPROC $String$_fun_asComment
   DECLPROC $PlayerBet$_init_child
   DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body_code_data
-  DECLPROC $SendParameters$_constructor_to_body_value
-  DECLPROC $CloseWinBet$_constructor_outcomeID
-  DECLPROC $Dispute$_fun_DistributeToWinner
-  DECLPROC $CloseDrawBet$_constructor_id
-  DECLPROC $Dispute$_fun_DistributeToAll
   DECLPROC $Dispute$_fun_bank
   DECLPROC $Dispute$_fun_outcomes
   DECLPROC $Dispute$_fun_winnerID
@@ -75,21 +69,25 @@ PROGRAM{
   DECLPROC $Dispute$_fun_getName
   DECLPROC $Dispute$_fun_getDescription
   DECLPROC $Dispute$_fun_getReferees
-  DECLPROC $Dispute$_fun_getPlayerBets
   DECLPROC $Dispute$_fun_getOutcomes
   DECLPROC $Fees$_constructor_percent_flat
   DECLPROC $Dispute$_fun_getFees
   DECLPROC $Dispute$_fun_getIsVoteFinished
   DECLPROC $Dispute$_fun_getWinnerOutcomeID
+  DECLPROC $TimeSettings$_constructor_startedAt_duration
+  DECLPROC $Dispute$_fun_getTimeSettings
   DECLPROC $Dispute$_fun_forward
   DECLPROC $Dispute$_fun_reply
   DECLPROC $Dispute$_fun_notify
+  DECLPROC $SendParameters$_constructor_to_body_value
+  DECLPROC $CloseWinBet$_constructor_outcomeID
   DECLPROC $SendParameters$_constructor_to_body_value_code_data
   DECLPROC $InternalSetBet$_constructor_outcomeID_amount_playerAddress
   DECLPROC $SendParameters$_constructor_to_bounce_value
   DECLPROC $DeployOk$_constructor_queryId
   DECLPROC $Dispute$_internal_binary_Vote
-  DECLPROC $Dispute$_internal_text_a532123cb0336f723e6d68fb72aacd34e508b94e3096de74bbc59883c1724cf3
+  DECLPROC $Dispute$_internal_text_50e9676b3ae7a6cf074643f26fd5615b39c3d44b96f19c6d2a48eec1c2a87457
+  DECLPROC $Dispute$_internal_binary_Claim
   DECLPROC $Dispute$_internal_binary_PlayerBetInit
   DECLPROC $Dispute$_internal_binary_WinBetDetails
   DECLPROC $Dispute$_internal_binary_DrawBetDetails
@@ -102,11 +100,11 @@ PROGRAM{
   66351 DECLMETHOD %getName
   119359 DECLMETHOD %getDescription
   96993 DECLMETHOD %getReferees
-  71745 DECLMETHOD %getPlayerBets
   127371 DECLMETHOD %getOutcomes
   106866 DECLMETHOD %getFees
   92668 DECLMETHOD %getIsVoteFinished
   111800 DECLMETHOD %getWinnerOutcomeID
+  85089 DECLMETHOD %getTimeSettings
   113617 DECLMETHOD supported_interfaces
   121275 DECLMETHOD get_abi_ipfs
   115390 DECLMETHOD lazy_deployment_completed
@@ -246,10 +244,6 @@ PROGRAM{
     32 STU
     __tact_string_builder_start INLINECALLDICT
   }>
-  __tact_string_builder_start_string PROCINLINE:<{
-    NEWC
-    __tact_string_builder_start INLINECALLDICT
-  }>
   __tact_string_builder_end PROCINLINE:<{
     UNCONS
     SWAP
@@ -266,10 +260,6 @@ PROGRAM{
       ENDC
     }>
     NIP
-  }>
-  __tact_string_builder_end_slice PROCINLINE:<{
-    __tact_string_builder_end INLINECALLDICT
-    CTOS
   }>
   __tact_string_builder_append PROCREF:<{
     DUP
@@ -336,6 +326,84 @@ PROGRAM{
       }>
     }>
     3 BLKDROP
+  }>
+  __tact_int_to_string PROCREF:<{
+    NEWC
+    OVER
+    0 LESSINT
+    IF:<{
+      45 PUSHINT
+      SWAP
+      8 STU
+      SWAP
+      NEGATE
+      SWAP
+    }>
+    OVER
+    1000000000000000000000000000000 PUSHINTX
+    LESS
+    IF:<{
+      0 PUSHINT
+      DUP
+      1 PUSHINT
+      UNTIL:<{
+        s0 s4 XCHG
+        10 PUSHINT
+        DIVMOD
+        48 ADDCONST
+        s5 PUSH
+        MUL
+        s1 s2 XCHG
+        ADD
+        s0 s4 XCHG
+        8 LSHIFT#
+        s0 s2 XCHG
+        INC
+        OVER
+        0 EQINT
+        s5 s3 s0 XCHG3
+      }>
+      DROP
+      s3 POP
+      3 LSHIFT#
+      STUX
+    }>ELSE<{
+      NIL
+      0 PUSHINT
+      UNTIL:<{
+        s3 PUSH
+        10 PUSHINT
+        MOD
+        s1 s2 XCHG
+        TPUSH
+        SWAP
+        INC
+        s0 s3 XCHG
+        10 PUSHINT
+        DIV
+        DUP
+        0 EQINT
+        s1 s4 XCHG
+      }>
+      s3 POP
+      s2 PUSH
+      DEC
+      s0 s3 XCHG
+      REPEAT:<{
+        s0 s2 PUSH2
+        INDEXVAR
+        48 ADDCONST
+        ROT
+        8 STU
+        s0 s2 XCHG
+        DEC
+        -ROT
+      }>
+      DROP
+      NIP
+    }>
+    ENDC
+    CTOS
   }>
   __tact_float_to_string PROCREF:<{
     DUP
@@ -498,18 +566,6 @@ PROGRAM{
     $CloseWinBet$_store INLINECALLDICT
     ENDC
   }>
-  $CloseDrawBet$_store PROCINLINE:<{
-    2880472030 PUSHINT
-    ROT
-    32 STU
-    8 STU
-  }>
-  $CloseDrawBet$_store_cell PROCINLINE:<{
-    NEWC
-    SWAP
-    $CloseDrawBet$_store INLINECALLDICT
-    ENDC
-  }>
   $Vote$_load PROCINLINE:<{
     32 LDU
     SWAP
@@ -519,6 +575,15 @@ PROGRAM{
     8 LDU
     8 LDU
     -ROT
+  }>
+  $Claim$_load PROCINLINE:<{
+    32 LDU
+    SWAP
+    2901386045 PUSHINT
+    EQUAL
+    129 THROWIFNOT
+    256 LDU
+    SWAP
   }>
   $PlayerBetInit$_load PROCINLINE:<{
     32 LDU
@@ -532,7 +597,7 @@ PROGRAM{
   $InitialState$_load PROCINLINE:<{
     32 LDU
     SWAP
-    220680993 PUSHINT
+    1129621790 PUSHINT
     EQUAL
     129 THROWIFNOT
     LDREF
@@ -543,12 +608,14 @@ PROGRAM{
     SWAP
     CTOS
     SWAP
+    32 LDU
     LDDICT
     LDREF
     SWAP
     CTOS
     LDDICT
     DROP
+    s1 s5 XCHG
     s1 s4 XCHG
     s3 s3 s0 XCHG3
   }>
@@ -631,30 +698,34 @@ PROGRAM{
     }>
   }>
   $Dispute$_store PROCINLINE:<{
-    s13 s12 XCHG2
+    s14 s13 XCHG2
     STGRAMS
     NEWC
+    s0 s12 XCHG2
+    STSLICER
+    ENDC
     s0 s11 XCHG2
-    STSLICER
-    ENDC
+    STREF
+    NEWC
     s0 s10 XCHG2
-    STREF
-    NEWC
-    s0 s9 XCHG2
     STSLICER
     ENDC
-    s0 s8 XCHG2
+    s0 s9 XCHG2
     STREF
-    s0 s6 XCHG
+    s1 s7 XCHG
+    32 STU
+    s1 s5 XCHG
+    32 STU
+    s0 s3 XCHG
     NEWC
     STDICT
-    s1 s5 XCHG
-    STDICT
-    s1 s3 XCHG
+    s1 s2 XCHG
     STDICT
     8 STU
+    s1 s2 XCHG
     8 STU
-    8 STU
+    s1 s2 XCHG
+    256 STU
     s1 s2 XCHG
     1 STI
     s1 s2 XCHG
@@ -679,15 +750,16 @@ PROGRAM{
     SWAP
     CTOS
     SWAP
+    32 LDU
+    32 LDU
     LDREF
     SWAP
     CTOS
     LDDICT
     LDDICT
-    LDDICT
     8 LDU
     8 LDU
-    8 LDU
+    256 LDU
     1 LDI
     257 PUSHINT
     LDIX
@@ -695,9 +767,11 @@ PROGRAM{
     LDIX
     LDGRAMS
     DROP
-    s10 s13 XCHG
-    s10 s12 XCHG
-    s10 s11 XCHG
+    s9 s14 XCHG
+    s9 s13 XCHG
+    s9 s12 XCHG
+    s9 s11 XCHG
+    s9 s10 XCHG
   }>
   $StateInit$_not_null PROCINLINE:<{
     DUP
@@ -723,6 +797,8 @@ PROGRAM{
   }>
   $Fees$_to_external PROCINLINE:<{
   }>
+  $TimeSettings$_to_external PROCINLINE:<{
+  }>
   $PlayerBet$init$_store PROCINLINE:<{
     -ROT
     __tact_store_address INLINECALLDICT
@@ -734,17 +810,17 @@ PROGRAM{
     SWAP
     CTOS
     $InitialState$_load INLINECALLDICT
-    1 4 BLKDROP2
+    1 5 BLKDROP2
   }>
   $Dispute$_contract_init PROCREF:<{
     0 PUSHINT
-    PUSHNULL
-    s1 s1 PUSH2
+    s0 s0 PUSH2
     FALSE
     -1 PUSHINT
-    20 PUSHINT
+    5 PUSHINT
     100000000 PUSHINT
-    s4 PUSH
+    NOW
+    s5 PUSH
     WHILE:<{
       s10 PUSH
       257 PUSHINT
@@ -803,12 +879,15 @@ PROGRAM{
       INC
     }>
     DROP
+    s8 s13 XCHG
     s8 s12 XCHG
     s8 s11 XCHG
-    s8 s10 XCHG
-    s8 s9 XCHG
-    s7 s8 XCHG
-    5 -ROLL
+    s10 s5 XCHG2
+    s8 s3 XCHG2
+    s0 s9 XCHG2
+    s0 s7 XCHG
+    s0 s6 XCHG
+    s4 s1 s4 XCHG3
   }>
   $Dispute$_contract_load PROCREF:<{
     c4 PUSH
@@ -820,7 +899,7 @@ PROGRAM{
     SWAP
     IFJMP:<{
       $Dispute$_load INLINECALLDICT
-      1 13 BLKDROP2
+      1 14 BLKDROP2
     }>
     MYADDR
     11 PLDU
@@ -828,9 +907,9 @@ PROGRAM{
     EQUAL
     137 THROWIFNOT
     $Dispute$init$_load INLINECALLDICT
-    s0 s4 XCHG
+    s0 s5 XCHG
     ENDS
-    3 ROLL
+    4 ROLL
     $Dispute$_contract_init INLINECALLDICT
   }>
   $Dispute$_contract_store PROCINLINE:<{
@@ -841,7 +920,7 @@ PROGRAM{
     TRUE
     SWAP
     1 STI
-    13 -ROLL
+    14 -ROLL
     $Dispute$_store INLINECALLDICT
     ENDC
     c4 POP
@@ -992,62 +1071,8 @@ PROGRAM{
   }>
   $SendParameters$_constructor_bounce_to_value_mode_body_code_data PROCINLINE:<{
   }>
-  $SendParameters$_constructor_to_body_value PROCINLINE:<{
-    TRUE
-    0 PUSHINT
-    s0 s4 XCHG2
-    s0 s3 XCHG
-    PUSHNULL
-    PUSHNULL
-  }>
-  $CloseWinBet$_constructor_outcomeID PROCINLINE:<{
-  }>
-  $Dispute$_fun_DistributeToWinner PROCREF:<{
-    0 PUSHINT
-    WHILE:<{
-      s0 s6 PUSH2
-      LESS
-    }>DO<{
-      __tact_context_sys GETGLOB
-      MYADDR
-      s2 PUSH
-      $PlayerBet$_init_child INLINECALLDICT
-      $global_contractAddress INLINECALLDICT
-      s2 PUSH
-      $CloseWinBet$_constructor_outcomeID INLINECALLDICT
-      $CloseWinBet$_store_cell INLINECALLDICT
-      s4 PUSH
-      $SendParameters$_constructor_to_body_value INLINECALLDICT
-      $global_send INLINECALLDICT
-      INC
-    }>
-    2DROP
-  }>
-  $CloseDrawBet$_constructor_id PROCINLINE:<{
-  }>
-  $Dispute$_fun_DistributeToAll PROCREF:<{
-    0 PUSHINT
-    WHILE:<{
-      s0 s5 PUSH2
-      LESS
-    }>DO<{
-      __tact_context_sys GETGLOB
-      MYADDR
-      s2 PUSH
-      $PlayerBet$_init_child INLINECALLDICT
-      $global_contractAddress INLINECALLDICT
-      OVER
-      $CloseDrawBet$_constructor_id INLINECALLDICT
-      $CloseDrawBet$_store_cell INLINECALLDICT
-      s3 PUSH
-      $SendParameters$_constructor_to_body_value INLINECALLDICT
-      $global_send INLINECALLDICT
-      INC
-    }>
-    DROP
-  }>
   $Dispute$_fun_bank PROCREF:<{
-    s12 PUSH
+    s13 PUSH
     $Int$_fun_toCoinsString INLINECALLDICT
   }>
   $Dispute$_fun_outcomes PROCREF:<{
@@ -1061,15 +1086,12 @@ PROGRAM{
     $Int$_fun_toCoinsString INLINECALLDICT
   }>
   $Dispute$_fun_getName PROCREF:<{
-    s11 PUSH
+    s12 PUSH
   }>
   $Dispute$_fun_getDescription PROCREF:<{
-    s10 PUSH
+    s11 PUSH
   }>
   $Dispute$_fun_getReferees PROCREF:<{
-    s9 PUSH
-  }>
-  $Dispute$_fun_getPlayerBets PROCREF:<{
     s8 PUSH
   }>
   $Dispute$_fun_getOutcomes PROCREF:<{
@@ -1086,6 +1108,12 @@ PROGRAM{
   }>
   $Dispute$_fun_getWinnerOutcomeID PROCREF:<{
     s2 PUSH
+  }>
+  $TimeSettings$_constructor_startedAt_duration PROCINLINE:<{
+  }>
+  $Dispute$_fun_getTimeSettings PROCREF:<{
+    s10 s9 PUSH2
+    $TimeSettings$_constructor_startedAt_duration INLINECALLDICT
   }>
   $Dispute$_fun_forward PROCREF:<{
     PUSHNULL
@@ -1123,6 +1151,16 @@ PROGRAM{
     PUSHNULL
     $Dispute$_fun_forward INLINECALLDICT
   }>
+  $SendParameters$_constructor_to_body_value PROCINLINE:<{
+    TRUE
+    0 PUSHINT
+    s0 s4 XCHG2
+    s0 s3 XCHG
+    PUSHNULL
+    PUSHNULL
+  }>
+  $CloseWinBet$_constructor_outcomeID PROCINLINE:<{
+  }>
   $SendParameters$_constructor_to_body_value_code_data PROCINLINE:<{
     TRUE
     s0 s5 XCHG
@@ -1145,22 +1183,23 @@ PROGRAM{
     s5 PUSH
     IF:<{
       B{b5ee9c7241010101001400002400000000766f74652068617320656e646564f1ed47e1} B>boc PUSHREF
-      s13 s15 XCHG
-      5 11 REVERSE
-      s10 s14 XCHG
+      s14 16 s() XCHG
+      5 12 REVERSE
+      s11 s15 XCHG
+      s10 16 s() XCHG
       s9 s15 XCHG
-      s8 s14 XCHG
+      s8 16 s() XCHG
       s7 s15 XCHG
-      s6 s14 XCHG
+      s6 16 s() XCHG
       s5 s15 XCHG
-      s4 s14 XCHG
+      s4 16 s() XCHG
       s3 s15 XCHG
-      s14 s15 s0 XCHG3
+      s2 16 s() XCHG
+      s1 s15 XCHG
       $Dispute$_fun_reply INLINECALLDICT
-      s12 s14 XCHG
-      2 12 BLKSWAP
+      2 14 BLKSWAP
     }>
-    s11 PUSH
+    s10 PUSH
     257 PUSHINT
     s2 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -1174,22 +1213,23 @@ PROGRAM{
     }>
     IF:<{
       B{b5ee9c7241010101001900002e000000006e6f7420616c6c6f77656420746f20766f7465ac571d70} B>boc PUSHREF
-      s13 s15 XCHG
-      5 11 REVERSE
-      s10 s14 XCHG
+      s14 16 s() XCHG
+      5 12 REVERSE
+      s11 s15 XCHG
+      s10 16 s() XCHG
       s9 s15 XCHG
-      s8 s14 XCHG
+      s8 16 s() XCHG
       s7 s15 XCHG
-      s6 s14 XCHG
+      s6 16 s() XCHG
       s5 s15 XCHG
-      s4 s14 XCHG
+      s4 16 s() XCHG
       s3 s15 XCHG
-      s14 s15 s0 XCHG3
+      s2 16 s() XCHG
+      s1 s15 XCHG
       $Dispute$_fun_reply INLINECALLDICT
-      s12 s14 XCHG
-      2 12 BLKSWAP
+      2 14 BLKSWAP
     }>
-    s11 PUSH
+    s10 PUSH
     257 PUSHINT
     s2 PUSH
     __tact_dict_get_int_cell INLINECALLDICT
@@ -1201,41 +1241,36 @@ PROGRAM{
     NOT
     IF:<{
       B{b5ee9c7241010101001900002e000000006e6f7420616c6c6f77656420746f20766f7465ac571d70} B>boc PUSHREF
+      s14 17 s() XCHG
       s13 16 s() XCHG
       s12 s15 XCHG
-      s11 s14 XCHG
+      s11 17 s() XCHG
       s10 16 s() XCHG
       s9 s15 XCHG
-      s8 s14 XCHG
+      s8 17 s() XCHG
       s7 16 s() XCHG
       s6 s15 XCHG
-      s5 s14 XCHG
+      s5 17 s() XCHG
       s4 16 s() XCHG
       s3 s15 XCHG
-      s2 s14 XCHG
+      s2 17 s() XCHG
       s1 16 s() XCHG
       $Dispute$_fun_reply INLINECALLDICT
+      s13 16 s() XCHG
       s12 s15 XCHG
       3 12 BLKSWAP
     }>
-    -1 EQINT
+    0 EQINT
     IF:<{
-      2DROP
-      B{b5ee9c7241010101001300002200000000766f74656420616c7265616479b004f982} B>boc PUSHREF
-      $Dispute$_fun_reply INLINECALLDICT
-    }>ELSE<{
       s9 PUSH
       257 PUSHINT
       s3 PUSH
       __tact_dict_get_int_cell INLINECALLDICT
       $Outcome$_load_opt INLINECALLDICT
       ISNULL
+      NOT
       IF:<{
-        2DROP
-        B{b5ee9c724101010100150000260000000077726f6e67206f7574636f6d65494437d0f201} B>boc PUSHREF
-        $Dispute$_fun_reply INLINECALLDICT
-      }>ELSE<{
-        s11 PUSH
+        s10 PUSH
         257 PUSHINT
         s2 PUSH
         __tact_dict_get_int_cell INLINECALLDICT
@@ -1247,203 +1282,216 @@ PROGRAM{
         257 PUSHINT
         s0 s2 XCHG
         $Referee$_store_cell INLINECALLDICT
-        s3 s13 XCHG
+        s3 s12 XCHG
         s1 s2 XCHG
         __tact_dict_set_int_cell INLINECALLDICT
         s8 PUSH
         257 PUSHINT
-        s12 PUSH
+        s11 PUSH
         __tact_dict_get_int_cell INLINECALLDICT
         $Outcome$_load_opt INLINECALLDICT
         $Outcome$_not_null INLINECALLDICT
         SWAP
         INC
-        s3 s3 s0 XCHG3
+        s3 s2 s2 XC2PU
         257 PUSHINT
-        s0 s4 XCHG
+        s0 s5 XCHG
         $Outcome$_store_cell INLINECALLDICT
-        s3 s10 XCHG
-        s1 s12 s0 XCHG3
+        s11 s11 s0 XCHG3
+        s12 s(-1) PUXC
         __tact_dict_set_int_cell INLINECALLDICT
         B{b5ee9c7241010101001b000032000000005468616e6b7320666f7220796f757220766f7465216b7f8f3f} B>boc PUSHREF
-        s1 s8 XCHG
+        s14 16 s() XCHG
+        5 12 REVERSE
+        s11 s15 XCHG
+        s10 16 s() XCHG
+        s9 s8 s0 XCHG3
+        s7 s6 s0 XCHG3
+        s5 s4 s0 XCHG3
+        s1 s3 s0 XCHG3
         $Dispute$_fun_reply INLINECALLDICT
-      }>
-    }>
-  }>
-  $Dispute$_internal_text_a532123cb0336f723e6d68fb72aacd34e508b94e3096de74bbc59883c1724cf3 PROCINLINE:<{
-    45881 PUSHINT
-    s4 PUSH
-    NOT
-    THROWANYIFNOT
-    0 PUSHINT
-    FALSE
-    s1 s1 PUSH2
-    -1 PUSHINT
-    WHILE:<{
-      s12 PUSH
-      257 PUSHINT
-      s6 PUSH
-      __tact_dict_get_int_cell INLINECALLDICT
-      $Outcome$_load_opt INLINECALLDICT
-      ISNULL
-      NOT
-      IF:<{
-        s3 PUSH
-        NOT
-      }>ELSE<{
-        FALSE
-      }>
-    }>DO<{
-      s12 PUSH
-      257 PUSHINT
-      s6 PUSH
-      __tact_dict_get_int_cell INLINECALLDICT
-      $Outcome$_load_opt INLINECALLDICT
-      $Outcome$_not_null INLINECALLDICT
-      s1 s3 XCHG
-      3 BLKDROP
-      DUP
-      1 LSHIFT#
-      s12 PUSH
-      GREATER
-      IF:<{
-        s4 POP
-        s7 POP
-        s3 PUSH
-        s0 s7 XCHG
-        TRUE
-        s0 s4 XCHG
-      }>
-      s0 s1 PUSH2
-      GREATER
-      IF:<{
-        2 1 BLKDROP2
-        s3 s(-1) s(-1) PUXCPU
-      }>
-      s1 s3 XCHG
-      ADD
-      s0 s4 XCHG
-      INC
-      s4 s1 s4 XCHG3
-    }>
-    s4 POP
-    s0 s2 XCHG
-    IF:<{
-      s12 s15 XCHG
-      s11 s14 XCHG
-      s10 s13 XCHG
-      s9 s15 XCHG
-      s8 s14 XCHG
-      s7 s13 XCHG
-      s6 s15 XCHG
-      s5 s14 XCHG
-      s4 s13 XCHG
-      s3 s15 XCHG
-      s14 PUSH
-      s14 s1 s3 XCHG3
-      s1 16 s() XCHG
-      s0 s15 XCHG
-      $Dispute$_fun_DistributeToWinner INLINECALLDICT
-      s3 POP
-      s6 PUSH
-      257 PUSHINT
-      s3 PUSH
-      __tact_dict_get_int_cell INLINECALLDICT
-      $Outcome$_load_opt INLINECALLDICT
-      $Outcome$_not_null INLINECALLDICT
-      s2 s3 XCHG
-      3 BLKDROP
-      __tact_string_builder_start_string INLINECALLDICT
-      B{b5ee9c724101010100120000205468652077696e6e65722069733a2027227c54b0} B>boc <s PUSHSLICE
-      __tact_string_builder_append INLINECALLDICT
-      SWAP
-      __tact_string_builder_append INLINECALLDICT
-      B{b5ee9c724101010100240000442721205072697a65732077696c6c20736f6f6e2062652064697374726962757465642da7b068} B>boc <s PUSHSLICE
-      __tact_string_builder_append INLINECALLDICT
-      TRUE
-      SWAP
-      __tact_string_builder_end_slice INLINECALLDICT
-      $String$_fun_asComment INLINECALLDICT
-      s1 s4 XCHG
-      $Dispute$_fun_reply INLINECALLDICT
-      s12 s15 XCHG
-      3 12 BLKSWAP
-    }>
-    s8 PUSH
-    EQUAL
-    IF:<{
-      0 PUSHINT
-      DUP
-      WHILE:<{
-        s11 PUSH
-        257 PUSHINT
-        s2 PUSH
-        __tact_dict_get_int_cell INLINECALLDICT
-        $Outcome$_load_opt INLINECALLDICT
-        ISNULL
-        NOT
-      }>DO<{
-        s11 PUSH
-        257 PUSHINT
-        s2 PUSH
-        __tact_dict_get_int_cell INLINECALLDICT
-        $Outcome$_load_opt INLINECALLDICT
-        $Outcome$_not_null INLINECALLDICT
-        s1 s3 XCHG
-        3 BLKDROP
-        s4 PUSH
-        EQUAL
-        IF:<{
-          SWAP
-          INC
-          SWAP
-        }>
+        s0 s6 XCHG
         INC
-      }>
-      DROP
-      1 2 BLKDROP2
-      1 EQINT
-      IF:<{
-        s3 POP
-        s2 PUSH
-        $Dispute$_fun_DistributeToWinner INLINECALLDICT
-        s3 POP
+        s15 PUSH
+        1 LSHIFT#
         s6 PUSH
-        257 PUSHINT
-        s3 PUSH
-        __tact_dict_get_int_cell INLINECALLDICT
-        $Outcome$_load_opt INLINECALLDICT
-        $Outcome$_not_null INLINECALLDICT
-        s2 s3 XCHG
-        3 BLKDROP
-        __tact_string_builder_start_string INLINECALLDICT
-        B{b5ee9c724101010100120000205468652077696e6e65722069733a2027227c54b0} B>boc <s PUSHSLICE
-        __tact_string_builder_append INLINECALLDICT
-        SWAP
-        __tact_string_builder_append INLINECALLDICT
-        B{b5ee9c724101010100250000462721205072697a657320776f756c6420736f6f6e206265206469737472696275746564297f0c5b} B>boc <s PUSHSLICE
-        __tact_string_builder_append INLINECALLDICT
-        TRUE
-        SWAP
-        __tact_string_builder_end_slice INLINECALLDICT
-        $String$_fun_asComment INLINECALLDICT
-        s1 s4 XCHG
-        $Dispute$_fun_reply INLINECALLDICT
+        GREATER
+        IF:<{
+          2 2 BLKDROP2
+          s13 POP
+          TRUE
+        }>ELSE<{
+          s14 POP
+          s13 s4 PUSH2
+          EQUAL
+          IF:<{
+            s2 POP
+            0 PUSHINT
+            TRUE
+            WHILE:<{
+              s7 PUSH
+              257 PUSHINT
+              s3 PUSH
+              __tact_dict_get_int_cell INLINECALLDICT
+              $Outcome$_load_opt INLINECALLDICT
+              ISNULL
+              NOT
+            }>DO<{
+              s7 PUSH
+              257 PUSHINT
+              s3 PUSH
+              __tact_dict_get_int_cell INLINECALLDICT
+              $Outcome$_load_opt INLINECALLDICT
+              $Outcome$_not_null INLINECALLDICT
+              s1 s3 XCHG
+              3 BLKDROP
+              16 s() PUSH
+              0 GTINT
+              IF:<{
+                s2 s3 XCHG
+                3 BLKDROP
+                DUP
+                TRUE
+              }>ELSE<{
+                0 EQINT
+                IF:<{
+                  DROP
+                  FALSE
+                }>
+                s1 s2 XCHG
+              }>
+              s0 s2 XCHG
+              INC
+              ROT
+            }>
+            NIP
+            s14 POP
+            s0 s13 XCHG
+            IF:<{
+              TRUE
+            }>ELSE<{
+              -2 PUSHINT
+              s13 POP
+              TRUE
+            }>
+            s0 s13 XCHG2
+          }>ELSE<{
+            s14 POP
+          }>
+          s0 s12 XCHG
+          s13 s13 XCHG2
+        }>
       }>ELSE<{
-        DROP
-        $Dispute$_fun_DistributeToAll INLINECALLDICT
-        s3 POP
-        TRUE
-        B{b5ee9c7241010101002e00005800000000497427732061206472617721204265747320776f756c6420736f6f6e2062652072657475726e65649ef1675b} B>boc PUSHREF
-        s1 s4 XCHG
+        2DROP
+        B{b5ee9c724101010100150000260000000077726f6e67206f7574636f6d65494437d0f201} B>boc PUSHREF
         $Dispute$_fun_reply INLINECALLDICT
+        s6 s13 XCHG
+        s2 s12 XCHG
+        s6 s11 XCHG
+        s2 s10 XCHG
+        s6 s9 XCHG
+        s2 s8 XCHG
+        s6 s7 XCHG
+        s2 s6 XCHG
+        s5 s1 s4 XCHG3
+        s0 s1 s3 XCHG3
       }>
     }>ELSE<{
       2DROP
+      B{b5ee9c7241010101001300002200000000766f74656420616c7265616479b004f982} B>boc PUSHREF
+      $Dispute$_fun_reply INLINECALLDICT
+      s6 s13 XCHG
+      s2 s12 XCHG
+      s6 s11 XCHG
+      s2 s10 XCHG
+      s6 s9 XCHG
+      s2 s8 XCHG
+      s6 s7 XCHG
+      s2 s6 XCHG
+      s5 s1 s4 XCHG3
+      s0 s1 s3 XCHG3
     }>
-    B{b5ee9c7241010101001900002e0000000057652063616e27742066696e697368206e6f773a4b552a} B>boc PUSHREF
-    $Dispute$_fun_reply INLINECALLDICT
+    s11 s13 XCHG
+    s10 s12 XCHG
+    s9 s11 XCHG
+    s8 s10 XCHG
+    s7 s9 XCHG
+    s6 s8 XCHG
+    s5 s7 XCHG
+    s5 s6 XCHG
+    s3 s5 XCHG
+    s4 s1 s3 XCHG3
+    s0 s2 XCHG
+  }>
+  $Dispute$_internal_text_50e9676b3ae7a6cf074643f26fd5615b39c3d44b96f19c6d2a48eec1c2a87457 PROCINLINE:<{
+    s3 PUSH
+    -1 EQINT
+    IF:<{
+      B{b5ee9c7241010101001c00003400000000766f74652068617320616c726561647920656e64656445c0d461} B>boc PUSHREF
+      $Dispute$_fun_reply INLINECALLDICT
+    }>
+    NOW
+    s11 PUSH
+    SUB
+    s10 PUSH
+    GREATER
+    IF:<{
+      2 2 BLKDROP2
+      TRUE
+      -2 PUSHINT
+    }>ELSE<{
+      B{b5ee9c7241010101001800002c00000000766f746520686173206e6f7420656e646564e982fb84} B>boc PUSHREF
+      $Dispute$_fun_reply INLINECALLDICT
+      2SWAP
+    }>
+    2SWAP
+  }>
+  $Dispute$_internal_binary_Claim PROCINLINE:<{
+    s4 PUSH
+    0 EQINT
+    IF:<{
+      B{b5ee9c7241010101001800002c00000000766f746520686173206e6f7420656e646564e982fb84} B>boc PUSHREF
+      s14 s15 XCHG
+      s13 s15 XCHG
+      s12 s15 XCHG
+      s11 s15 XCHG
+      s10 s15 XCHG
+      s1 s15 XCHG
+      s1 s9 XCHG
+      s1 s8 XCHG
+      s1 s7 XCHG
+      s1 s6 XCHG
+      s1 s5 XCHG
+      s1 s4 XCHG
+      s3 s3 s0 XCHG3
+      $Dispute$_fun_reply INLINECALLDICT
+      14 ROLL
+    }>
+    s3 PUSH
+    -2 EQINT
+    IF:<{
+      __tact_context_sys GETGLOB
+      MYADDR
+      ROT
+      $PlayerBet$_init_child INLINECALLDICT
+      $global_contractAddress INLINECALLDICT
+      B{b5ee9c7241010101001000001c00000000636c6f73652064726177f9e3db15} B>boc PUSHREF
+      s2 PUSH
+      $SendParameters$_constructor_to_body_value INLINECALLDICT
+      $global_send INLINECALLDICT
+    }>ELSE<{
+      __tact_context_sys GETGLOB
+      MYADDR
+      ROT
+      $PlayerBet$_init_child INLINECALLDICT
+      $global_contractAddress INLINECALLDICT
+      s3 PUSH
+      $CloseWinBet$_constructor_outcomeID INLINECALLDICT
+      $CloseWinBet$_store_cell INLINECALLDICT
+      s2 PUSH
+      $SendParameters$_constructor_to_body_value INLINECALLDICT
+      $global_send INLINECALLDICT
+    }>
   }>
   $Dispute$_internal_binary_PlayerBetInit PROCINLINE:<{
     53866 PUSHINT
@@ -1484,23 +1532,30 @@ PROGRAM{
     $global_send INLINECALLDICT
     __tact_context_get INLINECALLDICT
     $Context$_get_value INLINECALLDICT
-    s1 18 s() XCHG
+    s1 19 s() XCHG
     ADD
-    s0 s9 XCHG
+    s9 PUSH
     INC
     __tact_context_get INLINECALLDICT
     $Context$_get_value INLINECALLDICT
-    s1 18 s() XCHG
+    s1 20 s() XCHG
     ADD
-    3 -ROLL
+    s4 s3 s4 XCHG3
     257 PUSHINT
-    s0 s4 XCHG
+    s0 s5 XCHG
     $Outcome$_store_cell INLINECALLDICT
-    s3 s10 XCHG
-    s1 s2 XCHG
+    s1 s11 XCHG
+    s1 s3 XCHG
     __tact_dict_set_int_cell INLINECALLDICT
-    s4 s12 XCHG
-    s0 s7 XCHG
+    __tact_context_get_sender INLINECALLDICT
+    s0 s6 XCHG
+    __tact_int_to_string INLINECALLDICT
+    $String$_fun_asComment INLINECALLDICT
+    s6 s0 s2 XC2PU
+    $SendParameters$_constructor_to_body_value INLINECALLDICT
+    $global_send INLINECALLDICT
+    s7 s13 XCHG
+    s4 s7 XCHG
   }>
   $Dispute$_internal_binary_WinBetDetails PROCINLINE:<{
     __tact_context_sys GETGLOB
@@ -1519,7 +1574,8 @@ PROGRAM{
     $Outcome$_load_opt INLINECALLDICT
     $Outcome$_not_null INLINECALLDICT
     3 1 BLKDROP2
-    s1 s15 XCPU
+    SWAP
+    16 s() PUSH
     MUL
     100 PUSHINT
     s5 PUSH
@@ -1571,63 +1627,64 @@ PROGRAM{
   %bank PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_bank INLINECALLDICT
-    13 1 BLKDROP2
+    14 1 BLKDROP2
   }>
   %outcomes PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_outcomes INLINECALLDICT
-    13 1 BLKDROP2
+    14 1 BLKDROP2
   }>
   %winnerID PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_winnerID INLINECALLDICT
-    13 1 BLKDROP2
+    14 1 BLKDROP2
   }>
   %balance PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_balance INLINECALLDICT
-    13 1 BLKDROP2
+    14 1 BLKDROP2
   }>
   %getName PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getName INLINECALLDICT
-    13 1 BLKDROP2
+    14 1 BLKDROP2
   }>
   %getDescription PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getDescription INLINECALLDICT
-    13 1 BLKDROP2
+    14 1 BLKDROP2
   }>
   %getReferees PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getReferees INLINECALLDICT
-    13 1 BLKDROP2
-  }>
-  %getPlayerBets PROC:<{
-    $Dispute$_contract_load INLINECALLDICT
-    $Dispute$_fun_getPlayerBets INLINECALLDICT
-    13 1 BLKDROP2
+    14 1 BLKDROP2
   }>
   %getOutcomes PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getOutcomes INLINECALLDICT
-    13 1 BLKDROP2
+    14 1 BLKDROP2
   }>
   %getFees PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getFees INLINECALLDICT
-    13 2 BLKDROP2
+    14 2 BLKDROP2
     $Fees$_to_external INLINECALLDICT
   }>
   %getIsVoteFinished PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getIsVoteFinished INLINECALLDICT
-    13 1 BLKDROP2
+    14 1 BLKDROP2
   }>
   %getWinnerOutcomeID PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getWinnerOutcomeID INLINECALLDICT
-    13 1 BLKDROP2
+    14 1 BLKDROP2
+  }>
+  %getTimeSettings PROC:<{
+    $Dispute$_contract_load INLINECALLDICT
+    $Dispute$_fun_getTimeSettings INLINECALLDICT
+    14 2 BLKDROP2
+    $TimeSettings$_to_external INLINECALLDICT
   }>
   supported_interfaces PROC:<{
     123515602279859691144772641439386770278 PUSHINT
@@ -1636,7 +1693,7 @@ PROGRAM{
     209474421377847335869795010607481022628 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d6145474d4635765538544b533335446735324470466367544b787836724b436e413344583248717a61705a59} PUSHSLICE
+    x{697066733a2f2f516d5a784a6f47684c565a694d5665706d636b7247556b5a4b664d6b346455396d694d48715362504c4c4d755776} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -1669,6 +1726,16 @@ PROGRAM{
       $Vote$_load INLINECALLDICT
       1 2 BLKDROP2
       $Dispute$_internal_binary_Vote INLINECALLDICT
+      TRUE
+    }>
+    DUP
+    2901386045 PUSHINT
+    EQUAL
+    IFJMP:<{
+      DROP
+      $Claim$_load INLINECALLDICT
+      NIP
+      $Dispute$_internal_binary_Claim INLINECALLDICT
       TRUE
     }>
     DUP
@@ -1725,10 +1792,10 @@ PROGRAM{
     0 EQINT
     IF:<{
       HASHSU
-      74720088237065038161279348610839939040386503683218682840129638538142396075251 PUSHINT
+      36597417023546096288062797227521057283557828452674683564135142637984161494103 PUSHINT
       EQUAL
       IFJMP:<{
-        $Dispute$_internal_text_a532123cb0336f723e6d68fb72aacd34e508b94e3096de74bbc59883c1724cf3 INLINECALLDICT
+        $Dispute$_internal_text_50e9676b3ae7a6cf074643f26fd5615b39c3d44b96f19c6d2a48eec1c2a87457 INLINECALLDICT
         TRUE
         RETALT
       }>
@@ -1756,7 +1823,7 @@ PROGRAM{
     s0 s2 XCHG
     __tact_context_sender SETGLOB
     $Dispute$_contract_load INLINECALLDICT
-    2 13 BLKSWAP
+    2 14 BLKSWAP
     $Dispute$_contract_router_internal INLINECALLDICT
     130 THROWIFNOT
     $Dispute$_contract_store INLINECALLDICT

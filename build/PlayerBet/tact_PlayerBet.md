@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: PlayerBet
-BOC Size: 1201 bytes
+BOC Size: 1230 bytes
 
 # Types
-Total Types: 11
+Total Types: 12
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -48,6 +48,10 @@ Signature: `CloseWinBet{outcomeID:uint8}`
 ## CloseDrawBet
 TLB: `close_draw_bet#abb083de id:uint8 = CloseDrawBet`
 Signature: `CloseDrawBet{id:uint8}`
+
+## Claim
+TLB: `claim#acefa33d seqno:uint256 = Claim`
+Signature: `Claim{seqno:uint256}`
 
 # Get Methods
 Total Get Methods: 1

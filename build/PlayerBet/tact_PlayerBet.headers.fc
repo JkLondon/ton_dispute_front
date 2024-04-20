@@ -57,9 +57,6 @@ cell $DrawBetDetails$_store_cell((int, int, slice, int) v) inline;
 ;; $CloseWinBet$_load
 (slice, ((int))) $CloseWinBet$_load(slice sc_0) inline;
 
-;; $CloseDrawBet$_load
-(slice, ((int))) $CloseDrawBet$_load(slice sc_0) inline;
-
 ;; $PlayerBet$_store
 builder $PlayerBet$_store(builder build_0, (slice, int, int, int, slice, int) v) inline;
 

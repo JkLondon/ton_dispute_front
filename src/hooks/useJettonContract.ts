@@ -5,6 +5,7 @@ import { useAsyncInitialize } from "./useAsyncInitialize";
 import { useTonClient } from "./useTonClient";
 import { useTonConnect } from "./useTonConnect";
 import { Dictionary } from "@ton/core";
+import { Claim } from "../wrappers/PlayerBet";
 
 const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
 
@@ -21,7 +22,7 @@ export function useJettonContract() {
     const disputeContract = useAsyncInitialize(async()=>{
         if(!client || !wallet) return;
 
-        const contract = Dispute.fromAddress(Address.parse("kQDFv0qHSrdB_CC7rkBMUSotc4wVzoQw48vwvEJw0wRdjN9w"))//"kQBEEFRthzZAtfct2pW8XG_0R-20UEH3C5MIdCCbHCNbdj2x"))
+        const contract = Dispute.fromAddress(Address.parse("kQAcg5JnNlhw3wJqutMsYHmaZqMbJGibU7yeW71nyFfwCbTO"))//"kQBEEFRthzZAtfct2pW8XG_0R-20UEH3C5MIdCCbHCNbdj2x"))
 
         return client.open(contract) as OpenedContract<Dispute>
     }, [client, wallet])
@@ -147,10 +148,32 @@ export function useJettonContract() {
                 value: toNano("0.2")
             }, message)
         },
-        finish: () => {
+        claim0: () => {
+            const message: Claim = {
+                $$type: 'Claim',
+                seqno: 0n,
+            }
             disputeContract?.send(sender, {
-                value: toNano("1.2")
-            }, "finish")
+                value: toNano("0.5")
+            }, message)
+        },
+        claim1: () => {
+            const message: Claim = {
+                $$type: 'Claim',
+                seqno: 1n,
+            }
+            disputeContract?.send(sender, {
+                value: toNano("0.5")
+            }, message)
+        },
+        claim2: () => {
+            const message: Claim = {
+                $$type: 'Claim',
+                seqno: 2n,
+            }
+            disputeContract?.send(sender, {
+                value: toNano("0.5")
+            }, message)
         }
     }
 }

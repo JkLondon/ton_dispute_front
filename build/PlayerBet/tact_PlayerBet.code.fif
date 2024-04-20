@@ -17,7 +17,6 @@ PROGRAM{
   DECLPROC $DrawBetDetails$_store
   DECLPROC $DrawBetDetails$_store_cell
   DECLPROC $CloseWinBet$_load
-  DECLPROC $CloseDrawBet$_load
   DECLPROC $PlayerBet$_store
   DECLPROC $PlayerBet$_load
   DECLPROC $StateInit$_not_null
@@ -38,7 +37,7 @@ PROGRAM{
   DECLPROC $DeployOk$_constructor_queryId
   DECLPROC $PlayerBet$_internal_binary_InternalSetBet
   DECLPROC $PlayerBet$_internal_binary_CloseWinBet
-  DECLPROC $PlayerBet$_internal_binary_CloseDrawBet
+  DECLPROC $PlayerBet$_internal_text_d0f0205aa0389a00cb7163deb0e77dd6ab32de3b157af7206769e0378ef15582
   DECLPROC $PlayerBet$_internal_binary_Deploy
   118890 DECLMETHOD %details
   113617 DECLMETHOD supported_interfaces
@@ -170,15 +169,6 @@ PROGRAM{
     32 LDU
     SWAP
     2815938965 PUSHINT
-    EQUAL
-    129 THROWIFNOT
-    8 LDU
-    SWAP
-  }>
-  $CloseDrawBet$_load PROCINLINE:<{
-    32 LDU
-    SWAP
-    2880472030 PUSHINT
     EQUAL
     129 THROWIFNOT
     8 LDU
@@ -452,7 +442,7 @@ PROGRAM{
     EQUAL
     IF:<{
       0 PUSHINT
-      TRUE
+      FALSE
       130 PUSHINT
       s6 s5 s4 PUSH3
       s10 PUSH
@@ -465,21 +455,20 @@ PROGRAM{
     }>ELSE<{
       s5 PUSH
       0 PUSHINT
-      TRUE
+      FALSE
       130 PUSHINT
       $SendParameters$_constructor_to_value_bounce_mode INLINECALLDICT
       $global_send INLINECALLDICT
     }>
   }>
-  $PlayerBet$_internal_binary_CloseDrawBet PROCINLINE:<{
-    DROP
+  $PlayerBet$_internal_text_d0f0205aa0389a00cb7163deb0e77dd6ab32de3b157af7206769e0378ef15582 PROCINLINE:<{
     54404 PUSHINT
     __tact_context_get_sender INLINECALLDICT
     s7 s(-1) PUXC
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
     0 PUSHINT
-    TRUE
+    FALSE
     130 PUSHINT
     s6 s5 s4 PUSH3
     s10 PUSH
@@ -508,7 +497,7 @@ PROGRAM{
     209474421377847335869795010607481022628 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d56624d6152516a474244623673373274385141524541486b6775727573626764476a343254775834326d6d66} PUSHSLICE
+    x{697066733a2f2f516d56454134654c52694a59586565433274755a3169636f6b456b6d4e4a6150374a7a675a5835624e4a32415954} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -517,6 +506,8 @@ PROGRAM{
     SWAP
   }>
   $PlayerBet$_contract_router_internal PROCREF:<{
+    c2 SAVE
+    SAMEALTSAVE
     SWAP
     IFJMP:<{
       DROP
@@ -552,24 +543,28 @@ PROGRAM{
       TRUE
     }>
     DUP
-    2880472030 PUSHINT
-    EQUAL
-    IFJMP:<{
-      DROP
-      $CloseDrawBet$_load INLINECALLDICT
-      NIP
-      $PlayerBet$_internal_binary_CloseDrawBet INLINECALLDICT
-      TRUE
-    }>
     2490013878 PUSHINT
     EQUAL
     IFJMP:<{
+      DROP
       $Deploy$_load INLINECALLDICT
       NIP
       $PlayerBet$_internal_binary_Deploy INLINECALLDICT
       TRUE
     }>
-    DROP
+    0 EQINT
+    IF:<{
+      HASHSU
+      94505339100017769566569064924966240895030650552337441688394131766074231838082 PUSHINT
+      EQUAL
+      IFJMP:<{
+        $PlayerBet$_internal_text_d0f0205aa0389a00cb7163deb0e77dd6ab32de3b157af7206769e0378ef15582 INLINECALLDICT
+        TRUE
+        RETALT
+      }>
+    }>ELSE<{
+      DROP
+    }>
     FALSE
   }>
   recv_internal PROC:<{

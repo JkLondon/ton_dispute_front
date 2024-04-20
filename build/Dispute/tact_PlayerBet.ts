@@ -618,6 +618,48 @@ function dictValueParserVote(): DictionaryValue<Vote> {
     }
 }
 
+export type Claim = {
+    $$type: 'Claim';
+    seqno: bigint;
+}
+
+export function storeClaim(src: Claim) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(2901386045, 32);
+        b_0.storeUint(src.seqno, 256);
+    };
+}
+
+export function loadClaim(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 2901386045) { throw Error('Invalid prefix'); }
+    let _seqno = sc_0.loadUintBig(256);
+    return { $$type: 'Claim' as const, seqno: _seqno };
+}
+
+function loadTupleClaim(source: TupleReader) {
+    let _seqno = source.readBigNumber();
+    return { $$type: 'Claim' as const, seqno: _seqno };
+}
+
+function storeTupleClaim(source: Claim) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.seqno);
+    return builder.build();
+}
+
+function dictValueParserClaim(): DictionaryValue<Claim> {
+    return {
+        serialize: (src, buidler) => {
+            buidler.storeRef(beginCell().store(storeClaim(src)).endCell());
+        },
+        parse: (src) => {
+            return loadClaim(src.loadRef().beginParse());
+        }
+    }
+}
+
 export type PlayerBetInit = {
     $$type: 'PlayerBetInit';
     outcomeID: bigint;
@@ -664,6 +706,7 @@ export type InitialState = {
     $$type: 'InitialState';
     name: string;
     description: string;
+    duration: bigint;
     referees: Dictionary<bigint, Referee>;
     outcomes: Dictionary<bigint, Outcome>;
 }
@@ -671,9 +714,10 @@ export type InitialState = {
 export function storeInitialState(src: InitialState) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(220680993, 32);
+        b_0.storeUint(1129621790, 32);
         b_0.storeStringRefTail(src.name);
         b_0.storeStringRefTail(src.description);
+        b_0.storeUint(src.duration, 32);
         b_0.storeDict(src.referees, Dictionary.Keys.BigInt(257), dictValueParserReferee());
         let b_1 = new Builder();
         b_1.storeDict(src.outcomes, Dictionary.Keys.BigInt(257), dictValueParserOutcome());
@@ -683,27 +727,30 @@ export function storeInitialState(src: InitialState) {
 
 export function loadInitialState(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 220680993) { throw Error('Invalid prefix'); }
+    if (sc_0.loadUint(32) !== 1129621790) { throw Error('Invalid prefix'); }
     let _name = sc_0.loadStringRefTail();
     let _description = sc_0.loadStringRefTail();
+    let _duration = sc_0.loadUintBig(32);
     let _referees = Dictionary.load(Dictionary.Keys.BigInt(257), dictValueParserReferee(), sc_0);
     let sc_1 = sc_0.loadRef().beginParse();
     let _outcomes = Dictionary.load(Dictionary.Keys.BigInt(257), dictValueParserOutcome(), sc_1);
-    return { $$type: 'InitialState' as const, name: _name, description: _description, referees: _referees, outcomes: _outcomes };
+    return { $$type: 'InitialState' as const, name: _name, description: _description, duration: _duration, referees: _referees, outcomes: _outcomes };
 }
 
 function loadTupleInitialState(source: TupleReader) {
     let _name = source.readString();
     let _description = source.readString();
+    let _duration = source.readBigNumber();
     let _referees = Dictionary.loadDirect(Dictionary.Keys.BigInt(257), dictValueParserReferee(), source.readCellOpt());
     let _outcomes = Dictionary.loadDirect(Dictionary.Keys.BigInt(257), dictValueParserOutcome(), source.readCellOpt());
-    return { $$type: 'InitialState' as const, name: _name, description: _description, referees: _referees, outcomes: _outcomes };
+    return { $$type: 'InitialState' as const, name: _name, description: _description, duration: _duration, referees: _referees, outcomes: _outcomes };
 }
 
 function storeTupleInitialState(source: InitialState) {
     let builder = new TupleBuilder();
     builder.writeString(source.name);
     builder.writeString(source.description);
+    builder.writeNumber(source.duration);
     builder.writeCell(source.referees.size > 0 ? beginCell().storeDictDirect(source.referees, Dictionary.Keys.BigInt(257), dictValueParserReferee()).endCell() : null);
     builder.writeCell(source.outcomes.size > 0 ? beginCell().storeDictDirect(source.outcomes, Dictionary.Keys.BigInt(257), dictValueParserOutcome()).endCell() : null);
     return builder.build();
@@ -905,6 +952,51 @@ function dictValueParserFees(): DictionaryValue<Fees> {
     }
 }
 
+export type TimeSettings = {
+    $$type: 'TimeSettings';
+    startedAt: bigint;
+    duration: bigint;
+}
+
+export function storeTimeSettings(src: TimeSettings) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(src.startedAt, 32);
+        b_0.storeUint(src.duration, 32);
+    };
+}
+
+export function loadTimeSettings(slice: Slice) {
+    let sc_0 = slice;
+    let _startedAt = sc_0.loadUintBig(32);
+    let _duration = sc_0.loadUintBig(32);
+    return { $$type: 'TimeSettings' as const, startedAt: _startedAt, duration: _duration };
+}
+
+function loadTupleTimeSettings(source: TupleReader) {
+    let _startedAt = source.readBigNumber();
+    let _duration = source.readBigNumber();
+    return { $$type: 'TimeSettings' as const, startedAt: _startedAt, duration: _duration };
+}
+
+function storeTupleTimeSettings(source: TimeSettings) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.startedAt);
+    builder.writeNumber(source.duration);
+    return builder.build();
+}
+
+function dictValueParserTimeSettings(): DictionaryValue<TimeSettings> {
+    return {
+        serialize: (src, buidler) => {
+            buidler.storeRef(beginCell().store(storeTimeSettings(src)).endCell());
+        },
+        parse: (src) => {
+            return loadTimeSettings(src.loadRef().beginParse());
+        }
+    }
+}
+
  type PlayerBet_init_args = {
     $$type: 'PlayerBet_init_args';
     parent: Address;
@@ -920,8 +1012,8 @@ function initPlayerBet_init_args(src: PlayerBet_init_args) {
 }
 
 async function PlayerBet_init(parent: Address, seqno: bigint) {
-    const __code = Cell.fromBase64('te6ccgECFgEABKUAART/APSkE/S88sgLAQIBYgIDA3rQAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxVFds88uCCEgQFAgFYDA0D7AGSMH/gcCHXScIflTAg1wsf3iCCELU1Ai26jkUw0x8BghC1NQItuvLggdMH+gD6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIQzBsEzQ0NIIA1IT4QlJwxwXy9H/gIIIQp9fRlbrjAiCCEKuwg9664wIGBwgAuMj4QwHMfwHKAFVQUGUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxYTy//LBwH6Algg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbIWPoCyQHMye1UAvgw0x8BghCn19GVuvLggdMHATGCANSE+EJSgMcF8vRSQLqOyHB/gQCCVHZUKshVMIII5HBDUAXLHxPLBwH6AgEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbL/8kpVTAQJBAjbW3bPI6NJXB/gQCCQzBtbW3bPOJ/CgoB0jDTHwGCEKuwg9668uCB0wcBMTCCANSE+EJScMcF8vRwf4EAglR2VCrIVTCCED4aDgtQBcsfE8sHAfoCASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFsv/ySlVMBAkECNtbds8fwoBZoIQlGqYtrqOp9MfAYIQlGqYtrry4IHTPwExyAGCEK/5D1dYyx/LP8n4QgFwbds8f+AwcAkBOm1tIm6zmVsgbvLQgG8iAZEy4hAkcAMEgEJQI9s8CgHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wALAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMAJW7vRgnBc7D1dLK57HoTsOdZKhRtmgnCd1jUtK2R8syLTry398WI5gnAgVcAbgGdjlM5YOq5HJbLDgnCdl05as07LczoOlm2UZuikgCAUgODwARsK+7UTQ0gABgAgEgEBECEaw1bZ5tnjYyQBITAHWs3caGrS4MzmdF5eotqi8pSEaKzOsqig7uaMaqrCsrKY0uKE1ODKaKK06t7krm6urGqGZOag3GRioQQAHW7UTQ1AH4Y9IAAY5T+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHT/9MH+gD6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdQB0PoAMBYVFEMwbBbg+CjXCwqDCbry4IkUAAhUcyEnAVb6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAYEBAdcAWQLRAds8FQBWcCCNCGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASCCTEtAA==');
-    const __system = Cell.fromBase64('te6cckECGAEABK8AAQHAAQEFoXV1AgEU/wD0pBP0vPLICwMCAWIMBAIBWAsFAgFICgYCASAIBwB1rN3Ghq0uDM5nReXqLaovKUhGiszrKooO7mjGqqwrKymNLihNTgymiitOre5K5urqxqhmTmoNxkYqEEACEaw1bZ5tnjYyQBUJAAhUcyEnABGwr7tRNDSAAGAAlbu9GCcFzsPV0srnsehOw51kqFG2aCcJ3WNS0rZHyzItOvLf3xYjmCcCBVwBuAZ2OUzlg6rkclssOCcJ2XTlqzTstzOg6WbZRm6KSAN60AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8VRXbPPLgghUODQC4yPhDAcx/AcoAVVBQZSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFhPL/8sHAfoCWCDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFshY+gLJAczJ7VQD7AGSMH/gcCHXScIflTAg1wsf3iCCELU1Ai26jkUw0x8BghC1NQItuvLggdMH+gD6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIQzBsEzQ0NIIA1IT4QlJwxwXy9H/gIIIQp9fRlbrjAiCCEKuwg9664wISEQ8BZoIQlGqYtrqOp9MfAYIQlGqYtrry4IHTPwExyAGCEK/5D1dYyx/LP8n4QgFwbds8f+AwcBABOm1tIm6zmVsgbvLQgG8iAZEy4hAkcAMEgEJQI9s8EwHSMNMfAYIQq7CD3rry4IHTBwExMIIA1IT4QlJwxwXy9HB/gQCCVHZUKshVMIIQPhoOC1AFyx8TywcB+gIBINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8Wy//JKVUwECQQI21t2zx/EwL4MNMfAYIQp9fRlbry4IHTBwExggDUhPhCUoDHBfL0UkC6jshwf4EAglR2VCrIVTCCCORwQ1AFyx8TywcB+gIBINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8Wy//JKVUwECQQI21t2zyOjSVwf4EAgkMwbW1t2zzifxMTAcrIcQHKAVAHAcoAcAHKAlAFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAP6AnABymgjbrORf5MkbrPilzMzAXABygDjDSFus5x/AcoAASBu8tCAAcyVMXABygDiyQH7ABQAmH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMwB1u1E0NQB+GPSAAGOU/pAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0//TB/oA+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHUAdD6ADAWFRRDMGwW4Pgo1wsKgwm68uCJFgFW+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAGBAQHXAFkC0QHbPBcAVnAgjQhgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEggkxLQAq52Mt');
+    const __code = Cell.fromBase64('te6ccgECGAEABMIAART/APSkE/S88sgLAQIBYgIDA3rQAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxVFds88uCCFAQFAgFYDg8D9O2i7fsBkjB/4HAh10nCH5UwINcLH94gghC1NQItuo5FMNMfAYIQtTUCLbry4IHTB/oA+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiEMwbBM0NDSCANSE+EJScMcF8vR/4CCCEKfX0ZW64wIgghCUapi2uuMCBgcIALjI+EMBzH8BygBVUFBlINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WE8v/ywcB+gJYINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WyFj6AskBzMntVAL4MNMfAYIQp9fRlbry4IHTBwExggDUhPhCUoDHBfL0UkC6jshwcIEAglR2VCrIVTCCCORwQ1AFyx8TywcB+gIBINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8Wy//JKVUwECQQI21t2zyOjSVwcIEAgkMwbW1t2zzifwsLAVAw0x8BghCUapi2uvLggdM/ATHIAYIQr/kPV1jLH8s/yfhCAXBt2zx/CQEOwACRMOMNcAoBOm1tIm6zmVsgbvLQgG8iAZEy4hAkcAMEgEJQI9s8CwL++QGC8NDwIFqgOJoAy3Fj3rDnfdarMt47FXr3IGdp4DeO8VWCuo7YggDUhPhCUnDHBfL0cHCBAIJUdlQqyFUwghA+Gg4LUAXLHxPLBwH6AgEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbL/8kpVTAQJBAjbW3bPH/bMQsMAcrIcQHKAVAHAcoAcAHKAlAFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAP6AnABymgjbrORf5MkbrPilzMzAXABygDjDSFus5x/AcoAASBu8tCAAcyVMXABygDiyQH7AA0AAuAAmH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMwAlbu9GCcFzsPV0srnsehOw51kqFG2aCcJ3WNS0rZHyzItOvLf3xYjmCcCBVwBuAZ2OUzlg6rkclssOCcJ2XTlqzTstzOg6WbZRm6KSAIBSBARABGwr7tRNDSAAGACASASEwIRrDVtnm2eNjJAFBUAdazdxoatLgzOZ0Xl6i2symcOqc5IKYiISy1obo2syWlHDMnOJy7GiwoJa0ppywymhiYtam6u7SyO61BAAdbtRNDUAfhj0gABjlP6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdP/0wf6APpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB1AHQ+gAwFhUUQzBsFuD4KNcLCoMJuvLgiRYACFRzIScBVvpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgBgQEB1wBZAtEB2zwXAFZwII0IYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABIIJMS0A');
+    const __system = Cell.fromBase64('te6cckECGgEABMwAAQHAAQEFoXV1AgEU/wD0pBP0vPLICwMCAWIMBAIBWAsFAgFICgYCASAIBwB1rN3Ghq0uDM5nReXqLazKZw6pzkgpiIhLLWhujazJaUcMyc4nLsaLCglrSmnLDKaGJi1qbq7tLI7rUEACEaw1bZ5tnjYyQBcJAAhUcyEnABGwr7tRNDSAAGAAlbu9GCcFzsPV0srnsehOw51kqFG2aCcJ3WNS0rZHyzItOvLf3xYjmCcCBVwBuAZ2OUzlg6rkclssOCcJ2XTlqzTstzOg6WbZRm6KSAN60AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8VRXbPPLgghcODQC4yPhDAcx/AcoAVVBQZSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFhPL/8sHAfoCWCDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFshY+gLJAczJ7VQD9O2i7fsBkjB/4HAh10nCH5UwINcLH94gghC1NQItuo5FMNMfAYIQtTUCLbry4IHTB/oA+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiEMwbBM0NDSCANSE+EJScMcF8vR/4CCCEKfX0ZW64wIgghCUapi2uuMCFBIPAQ7AAJEw4w1wEAL++QGC8NDwIFqgOJoAy3Fj3rDnfdarMt47FXr3IGdp4DeO8VWCuo7YggDUhPhCUnDHBfL0cHCBAIJUdlQqyFUwghA+Gg4LUAXLHxPLBwH6AgEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbL/8kpVTAQJBAjbW3bPH/bMRURAALgAVAw0x8BghCUapi2uvLggdM/ATHIAYIQr/kPV1jLH8s/yfhCAXBt2zx/EwE6bW0ibrOZWyBu8tCAbyIBkTLiECRwAwSAQlAj2zwVAvgw0x8BghCn19GVuvLggdMHATGCANSE+EJSgMcF8vRSQLqOyHBwgQCCVHZUKshVMIII5HBDUAXLHxPLBwH6AgEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbL/8kpVTAQJBAjbW3bPI6NJXBwgQCCQzBtbW3bPOJ/FRUByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsAFgCYfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzAHW7UTQ1AH4Y9IAAY5T+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHT/9MH+gD6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdQB0PoAMBYVFEMwbBbg+CjXCwqDCbry4IkYAVb6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAYEBAdcAWQLRAds8GQBWcCCNCGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASCCTEtAHokeSs=');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
@@ -957,7 +1049,6 @@ const PlayerBet_errors: { [key: number]: { message: string } } = {
     137: { message: `Masterchain support is not enabled for this contract` },
     5579: { message: `vote has ended` },
     37676: { message: `only child contract can call this function` },
-    45881: { message: `vote has ended.` },
     53866: { message: `wrong outcomeID` },
     54404: { message: `Parent only` },
 }
@@ -975,12 +1066,14 @@ const PlayerBet_types: ABIType[] = [
     {"name":"CloseWinBet","header":2815938965,"fields":[{"name":"outcomeID","type":{"kind":"simple","type":"uint","optional":false,"format":8}}]},
     {"name":"CloseDrawBet","header":2880472030,"fields":[{"name":"id","type":{"kind":"simple","type":"uint","optional":false,"format":8}}]},
     {"name":"Vote","header":2170129586,"fields":[{"name":"outcomeID","type":{"kind":"simple","type":"uint","optional":false,"format":8}},{"name":"refereeID","type":{"kind":"simple","type":"uint","optional":false,"format":8}}]},
+    {"name":"Claim","header":2901386045,"fields":[{"name":"seqno","type":{"kind":"simple","type":"uint","optional":false,"format":256}}]},
     {"name":"PlayerBetInit","header":3533363545,"fields":[{"name":"outcomeID","type":{"kind":"simple","type":"uint","optional":false,"format":8}}]},
-    {"name":"InitialState","header":220680993,"fields":[{"name":"name","type":{"kind":"simple","type":"string","optional":false}},{"name":"description","type":{"kind":"simple","type":"string","optional":false}},{"name":"referees","type":{"kind":"dict","key":"int","value":"Referee","valueFormat":"ref"}},{"name":"outcomes","type":{"kind":"dict","key":"int","value":"Outcome","valueFormat":"ref"}}]},
+    {"name":"InitialState","header":1129621790,"fields":[{"name":"name","type":{"kind":"simple","type":"string","optional":false}},{"name":"description","type":{"kind":"simple","type":"string","optional":false}},{"name":"duration","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"referees","type":{"kind":"dict","key":"int","value":"Referee","valueFormat":"ref"}},{"name":"outcomes","type":{"kind":"dict","key":"int","value":"Outcome","valueFormat":"ref"}}]},
     {"name":"Coin","header":null,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"Outcome","header":null,"fields":[{"name":"id","type":{"kind":"simple","type":"uint","optional":false,"format":8}},{"name":"name","type":{"kind":"simple","type":"string","optional":false}},{"name":"voted","type":{"kind":"simple","type":"uint","optional":false,"format":8}},{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
     {"name":"Referee","header":null,"fields":[{"name":"address","type":{"kind":"simple","type":"address","optional":false}},{"name":"voted","type":{"kind":"simple","type":"bool","optional":false}}]},
     {"name":"Fees","header":null,"fields":[{"name":"percent","type":{"kind":"simple","type":"uint","optional":false,"format":8}},{"name":"flat","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
+    {"name":"TimeSettings","header":null,"fields":[{"name":"startedAt","type":{"kind":"simple","type":"uint","optional":false,"format":32}},{"name":"duration","type":{"kind":"simple","type":"uint","optional":false,"format":32}}]},
 ]
 
 const PlayerBet_getters: ABIGetter[] = [
@@ -990,7 +1083,7 @@ const PlayerBet_getters: ABIGetter[] = [
 const PlayerBet_receivers: ABIReceiver[] = [
     {"receiver":"internal","message":{"kind":"typed","type":"InternalSetBet"}},
     {"receiver":"internal","message":{"kind":"typed","type":"CloseWinBet"}},
-    {"receiver":"internal","message":{"kind":"typed","type":"CloseDrawBet"}},
+    {"receiver":"internal","message":{"kind":"text","text":"close draw"}},
     {"receiver":"internal","message":{"kind":"typed","type":"Deploy"}},
 ]
 
@@ -1024,7 +1117,7 @@ export class PlayerBet implements Contract {
         this.init = init;
     }
     
-    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: InternalSetBet | CloseWinBet | CloseDrawBet | Deploy) {
+    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: InternalSetBet | CloseWinBet | 'close draw' | Deploy) {
         
         let body: Cell | null = null;
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'InternalSetBet') {
@@ -1033,8 +1126,8 @@ export class PlayerBet implements Contract {
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'CloseWinBet') {
             body = beginCell().store(storeCloseWinBet(message)).endCell();
         }
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'CloseDrawBet') {
-            body = beginCell().store(storeCloseDrawBet(message)).endCell();
+        if (message === 'close draw') {
+            body = beginCell().storeUint(0, 32).storeStringTail(message).endCell();
         }
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'Deploy') {
             body = beginCell().store(storeDeploy(message)).endCell();

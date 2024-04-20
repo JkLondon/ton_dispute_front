@@ -42,18 +42,17 @@
     var ($msg'outcomeID) = $msg;
     throw_unless(54404, ( __tact_slice_eq_bits($self'parent, __tact_context_get_sender()) ));
     if (($self'outcomeID == $msg'outcomeID)) {
-        $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'parent, 0, true, (128 + 2), $WinBetDetails$_store_cell($WinBetDetails$_constructor_outcomeID_amount_playerAddress_seqno($self'outcomeID, $self'amount, $self'playerAddress, $self'seqno))));
+        $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'parent, 0, false, (128 + 2), $WinBetDetails$_store_cell($WinBetDetails$_constructor_outcomeID_amount_playerAddress_seqno($self'outcomeID, $self'amount, $self'playerAddress, $self'seqno))));
     } else {
-        $global_send($SendParameters$_constructor_to_value_bounce_mode($self'parent, 0, true, (128 + 2)));
+        $global_send($SendParameters$_constructor_to_value_bounce_mode($self'parent, 0, false, (128 + 2)));
     }
     return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal), ());
 }
 
-(((slice, int, int, int, slice, int)), ()) $PlayerBet$_internal_binary_CloseDrawBet((slice, int, int, int, slice, int) $self, (int) $msg) impure inline {
+((slice, int, int, int, slice, int), ()) $PlayerBet$_internal_text_d0f0205aa0389a00cb7163deb0e77dd6ab32de3b157af7206769e0378ef15582((slice, int, int, int, slice, int) $self) impure inline {
     var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal) = $self;
-    var ($msg'id) = $msg;
     throw_unless(54404, ( __tact_slice_eq_bits($self'parent, __tact_context_get_sender()) ));
-    $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'parent, 0, true, (128 + 2), $DrawBetDetails$_store_cell($DrawBetDetails$_constructor_outcomeID_amount_playerAddress_seqno($self'outcomeID, $self'amount, $self'playerAddress, $self'seqno))));
+    $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'parent, 0, false, (128 + 2), $DrawBetDetails$_store_cell($DrawBetDetails$_constructor_outcomeID_amount_playerAddress_seqno($self'outcomeID, $self'amount, $self'playerAddress, $self'seqno))));
     return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal), ());
 }
 
@@ -84,7 +83,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmVbMaRQjGBDb6s72t8QAREAHkgurusbgdGj42TwX42mmf";
+    return "ipfs://QmVEA4eLRiJYXeeC2tuZ1icokEkmNJaP7JzgZX5bNJ2AYT";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -122,18 +121,22 @@ _ lazy_deployment_completed() method_id {
         return (self, true);
     }
     
-    ;; Receive CloseDrawBet message
-    if (op == 2880472030) {
-        var msg = in_msg~$CloseDrawBet$_load();
-        self~$PlayerBet$_internal_binary_CloseDrawBet(msg);
-        return (self, true);
-    }
-    
     ;; Receive Deploy message
     if (op == 2490013878) {
         var msg = in_msg~$Deploy$_load();
         self~$PlayerBet$_internal_binary_Deploy(msg);
         return (self, true);
+    }
+    
+    ;; Text Receivers
+    if (op == 0) {
+        var text_op = slice_hash(in_msg);
+        
+        ;; Receive "close draw" message
+        if (text_op == 0xd0f0205aa0389a00cb7163deb0e77dd6ab32de3b157af7206769e0378ef15582) {
+            self~$PlayerBet$_internal_text_d0f0205aa0389a00cb7163deb0e77dd6ab32de3b157af7206769e0378ef15582();
+            return (self, true);
+        }
     }
     
     return (self, false);

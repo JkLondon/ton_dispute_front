@@ -6,7 +6,7 @@ PROGRAM{
   DECLPROC get_abi_ipfs;
   DECLPROC ?fun_ref_2737a0a32c6eddae;
   DECLPROC ?fun_ref_65303ef1b4ec0135;
-  DECLPROC ?fun_ref_93bee69cb87e6362;
+  DECLPROC ?fun_ref_a9375d63fe2e81c0;
   DECLPROC ?fun_ref_b93b9862cda1783c;
   DECLPROC ?fun_ref_ca3fc7d59e0bf828;
   DECLPROC ?fun_ref_e31d986f279fa0fb;
@@ -43,7 +43,7 @@ PROGRAM{
     2 SETGLOBVAR
     ?fun_ref_65303ef1b4ec0135 INLINECALLDICT
     2 6 BLKSWAP
-    ?fun_ref_93bee69cb87e6362 INLINECALLDICT
+    ?fun_ref_a9375d63fe2e81c0 INLINECALLDICT
     130 THROWIFNOT
     NEWC
     3 GETGLOBVAR
@@ -117,7 +117,7 @@ PROGRAM{
     6 4 BLKDROP2
   }>
   get_abi_ipfs PROC:<{
-    x{697066733A2F2F516D56624D6152516A474244623673373274385141524541486B6775727573626764476A343254775834326D6D6682_} PUSHSLICE
+    x{697066733A2F2F516D56454134654C52694A59586565433274755A3169636F6B456B6D4E4A6150374A7A675A5835624E4A3241595482_} PUSHSLICE
   }>
   ?fun_ref_2737a0a32c6eddae PROCREF:<{
     s3 s2 s1 PUSH3
@@ -211,7 +211,9 @@ PROGRAM{
     s0 s1 XCHG
     ?fun_ref_ca3fc7d59e0bf828 INLINECALLDICT
   }>
-  ?fun_ref_93bee69cb87e6362 PROCREF:<{
+  ?fun_ref_a9375d63fe2e81c0 PROCREF:<{
+    2 SAVE
+    SAMEALTSAVE
     s0 s1 XCHG
     <{
       s0 POP
@@ -291,7 +293,7 @@ PROGRAM{
       EQUAL
       <{
         0 PUSHINT
-        -1 PUSHINT
+        0 PUSHINT
         130 PUSHINT
         s6 s5 s4 PUSH3
         s10 PUSH
@@ -333,7 +335,7 @@ PROGRAM{
       <{
         s5 PUSH
         0 PUSHINT
-        -1 PUSHINT
+        0 PUSHINT
         130 PUSHINT
         s3 s3 s0 XCHG3
         NULL
@@ -345,68 +347,10 @@ PROGRAM{
       -1 PUSHINT
     }> IFJMPREF
     s0 PUSH
-    2880472030 PUSHINT
-    EQUAL
-    <{
-      s0 POP
-      32 LDU
-      s0 s1 XCHG
-      2880472030 PUSHINT
-      EQUAL
-      129 THROWIFNOT
-      8 LDU
-      s0 s1 XCHG
-      s1 POP
-      s0 POP
-      54404 PUSHINT
-      2 GETGLOBVAR
-      s7 s1 PUXC
-      SDEQ
-      THROWANYIFNOT
-      0 PUSHINT
-      -1 PUSHINT
-      130 PUSHINT
-      s6 s5 s4 PUSH3
-      s10 PUSH
-      NEWC
-      4 1 BLKSWAP
-      1041894923 PUSHINT
-      s0 s5 XCHG2
-      32 STU
-      s1 s3 XCHG
-      8 STU
-      s0 s1 XCHG
-      STGRAMS
-      s0 s1 XCHG
-      s0 PUSH
-      SBITS
-      267 PUSHINT
-      EQUAL
-      136 THROWIFNOT
-      s0 PUSH
-      11 PLDU
-      s0 PUSH
-      1279 PUSHINT
-      EQUAL
-      137 THROWIF
-      10 PUSHPOW2
-      EQUAL
-      136 THROWIFNOT
-      STSLICER
-      256 STU
-      ENDC
-      s9 PUSH
-      4 1 BLKSWAP
-      s2 s4 XCHG
-      s2 s3 XCHG
-      NULL
-      NULL
-      ?fun_ref_b93b9862cda1783c INLINECALLDICT
-      -1 PUSHINT
-    }> IFJMPREF
     2490013878 PUSHINT
     EQUAL
     <{
+      s0 POP
       32 LDU
       s0 s1 XCHG
       2490013878 PUSHINT
@@ -428,9 +372,65 @@ PROGRAM{
       NULL
       ?fun_ref_e31d986f279fa0fb INLINECALLDICT
       -1 PUSHINT
+    }> IFJMPREF
+    0 EQINT
+    <{
+      s0 POP
     }> PUSHCONT
-    IFJMP
-    s0 POP
+    <{
+      HASHSU
+      94505339100017769566569064924966240895030650552337441688394131766074231838082 PUSHINT
+      EQUAL
+      <{
+        54404 PUSHINT
+        2 GETGLOBVAR
+        s7 s1 PUXC
+        SDEQ
+        THROWANYIFNOT
+        0 PUSHINT
+        0 PUSHINT
+        130 PUSHINT
+        s6 s5 s4 PUSH3
+        s10 PUSH
+        NEWC
+        4 1 BLKSWAP
+        1041894923 PUSHINT
+        s0 s5 XCHG2
+        32 STU
+        s1 s3 XCHG
+        8 STU
+        s0 s1 XCHG
+        STGRAMS
+        s0 s1 XCHG
+        s0 PUSH
+        SBITS
+        267 PUSHINT
+        EQUAL
+        136 THROWIFNOT
+        s0 PUSH
+        11 PLDU
+        s0 PUSH
+        1279 PUSHINT
+        EQUAL
+        137 THROWIF
+        10 PUSHPOW2
+        EQUAL
+        136 THROWIFNOT
+        STSLICER
+        256 STU
+        ENDC
+        s9 PUSH
+        4 1 BLKSWAP
+        s2 s4 XCHG
+        s2 s3 XCHG
+        NULL
+        NULL
+        ?fun_ref_b93b9862cda1783c INLINECALLDICT
+        -1 PUSHINT
+        RETFALSE
+      }> PUSHCONT
+      IFJMP
+    }> IFREFELSE
     0 PUSHINT
   }>
   ?fun_ref_b93b9862cda1783c PROCREF:<{

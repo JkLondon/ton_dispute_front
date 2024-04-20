@@ -12,7 +12,7 @@ import { fromNano } from "@ton/core";
 
 export function Jetton() {
   const {connected, wallet} = useTonConnect()
-  const {referees, bank, name, description, bet0, bet1, vote0, vote1, finish, contractAddress, fees, isVoted, outcomes} = useJettonContract()
+  const {referees, bank, name, description, bet0, bet1, vote0, vote1, claim0, claim1, claim2, contractAddress, fees, isVoted, outcomes} = useJettonContract()
   console.log(referees)
   const fe = "fees: " + fromNano(fees?.flat || 0) + ", " + fees?.percent + "%";
   const refereeList = referees ? Array.from(referees).map(([key, value]) => (
@@ -79,8 +79,16 @@ export function Jetton() {
           Vote on Outcome 1
         </Button>
         <Button
-          disabled={!connected} onClick={finish}>
-          Finish
+          disabled={!connected} onClick={claim0}>
+          claim0
+        </Button>
+        <Button
+          disabled={!connected} onClick={claim1}>
+          claim1
+        </Button>
+        <Button
+          disabled={!connected} onClick={claim2}>
+          claim2
         </Button>
       </FlexBoxCol>
     </Card>
