@@ -106,74 +106,35 @@ export function useJettonContract() {
         contractAddress: disputeContract?.address?.toString() ?? null,
         fees: disputeFees ?? null,
         isVoted: disputeIsVote ?? null,
-        bet0: () => {
+        bet: (outcomeID: bigint) => {
             const message: PlayerBetInit = {
                 $$type: 'PlayerBetInit',
-                outcomeID: 0n,
+                outcomeID: outcomeID,
             }
 
             disputeContract?.send(sender, {
                 value: toNano("7")
             }, message)
         },
-        bet1: () => {
-            const message: PlayerBetInit = {
-                $$type: 'PlayerBetInit',
-                outcomeID: 1n,
-            }
-
-            disputeContract?.send(sender, {
-                value: toNano("7")
-            }, message)
-        },
-        vote0: () => {
+        vote: (outcomeID: bigint, refereeID: bigint) => {
             const message: Vote = {
                 $$type: 'Vote',
-                outcomeID: 0n,
-                refereeID: 0n,
+                outcomeID: outcomeID,
+                refereeID: refereeID,
             }
 
             disputeContract?.send(sender, {
                 value: toNano("0.2")
             }, message)
         },
-        vote1: () => {
-            const message: Vote = {
-                $$type: 'Vote',
-                outcomeID: 1n,
-                refereeID: 0n,
-            }
-
-            disputeContract?.send(sender, {
-                value: toNano("0.2")
-            }, message)
-        },
-        claim0: () => {
+        claim: (betID: bigint) => {
             const message: Claim = {
                 $$type: 'Claim',
-                seqno: 0n,
+                seqno: betID,
             }
             disputeContract?.send(sender, {
                 value: toNano("0.5")
             }, message)
         },
-        claim1: () => {
-            const message: Claim = {
-                $$type: 'Claim',
-                seqno: 1n,
-            }
-            disputeContract?.send(sender, {
-                value: toNano("0.5")
-            }, message)
-        },
-        claim2: () => {
-            const message: Claim = {
-                $$type: 'Claim',
-                seqno: 2n,
-            }
-            disputeContract?.send(sender, {
-                value: toNano("0.5")
-            }, message)
-        }
     }
 }
