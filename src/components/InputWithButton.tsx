@@ -18,7 +18,8 @@ const InputWithButton = () => {
 				bg-telegram-light-gray
 				flex-1 p-4 rounded-l-lg text-sm
 				 focus:outline-none focus:ring focus:ring-opacity-50
-				 focus:text-telegram-dark-gray-300"
+				 focus:text-telegram-dark-gray-300
+				 "
 			/>
 			<button
 				onClick={handlePaste}

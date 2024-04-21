@@ -49,9 +49,23 @@ export function InformationBlock() {
   )
 }
 
+export function BalanceActionsBlock() {
+  return (
+    <FlexBoxCol className="gap-4">
+      <InputWithButton/>
+      <ButtonGrid count={4}>
+        <TGButton> +1 </TGButton>
+        <TGButton> +5 </TGButton>
+        <TGButton> +10 </TGButton>
+        <TGButton> +20 </TGButton>
+      </ButtonGrid>
+    </FlexBoxCol>
+  )
+}
+
 export function ActionsBlock() {
   return (
-    <ButtonGrid>
+    <ButtonGrid count={2}>
       <TGButton> Done </TGButton>
       <TGButton> Done </TGButton>
     </ButtonGrid>
@@ -96,6 +110,7 @@ export function Jetton() {
         <h3>Bet</h3>
         <InformationBlock></InformationBlock>
         <ActionsBlock></ActionsBlock>
+        <BalanceActionsBlock/>
         <FlexBoxRow>
           Wallet
           <Ellipsis>{ contractAddress ? Address.parse(contractAddress as string).toString() : "Loading..."}</Ellipsis>
@@ -161,7 +176,7 @@ export function Jetton() {
           disabled={!connected} onClick={handleClaim}>
           claim your bet
         </Button>
-        <ButtonGrid>
+        <ButtonGrid count={2}>
           <TGButton> Done </TGButton>
           <TGButton> Done </TGButton>
           <Label text={"Blue da bu di"}>
