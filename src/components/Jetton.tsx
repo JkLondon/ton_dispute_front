@@ -10,7 +10,51 @@ import {
 } from "./styled/styled";
 import { fromNano } from "@ton/core";
 import { useState } from "react";
-import TGButton from "./TGButton";
+import { TGButton } from "./TGButton";
+import {ButtonGrid} from "./ButtonGrid";
+import {TextBlock} from "./TextBlock";
+import {Label} from "./Label";
+
+export function InformationBlock() {
+  const {connected, wallet} = useTonConnect()
+  const {referees, bank, name, description, bet, vote, claim, contractAddress, fees, isVoted, outcomes} = useJettonContract()
+  const [betOutcomeID, setBetOutcomeID] = useState(0);
+  const [voteOutcomeID, setVoteOutcomeID] = useState(0);
+  const [voteRefereeID, setVoteRefereeID] = useState(0);
+  const [claimBetID, setClaimBetID] = useState(0);
+
+  return (
+    <div>
+        <Label text="Wallet">
+          <TextBlock>
+            <p>{ contractAddress ? Address.parse(contractAddress as string).toString() : "Loading..."}</p>
+          </TextBlock>
+        </Label>
+
+      <Label text="Name">
+        <TextBlock>
+          <p>{ name }</p>
+        </TextBlock>
+      </Label>
+
+      <Label text="Description">
+        <TextBlock>
+          <p>{ description }</p>
+        </TextBlock>
+      </Label>
+    </div>
+  )
+}
+
+export function ActionsBlock() {
+  <ButtonGrid>
+    <TGButton> Done </TGButton>
+    <TGButton> Done </TGButton>
+    <Label text={"Blue da bu di"}>
+      <TextBlock> Some text </TextBlock>
+    </Label>
+  </ButtonGrid>
+}
 
 export function Jetton() {
   const {connected, wallet} = useTonConnect()
@@ -48,6 +92,7 @@ export function Jetton() {
     <Card title="Jetton">
       <FlexBoxCol>
         <h3>Bet</h3>
+        <InformationBlock></InformationBlock>
         <FlexBoxRow>
           Wallet
           <Ellipsis>{ contractAddress ? Address.parse(contractAddress as string).toString() : "Loading..."}</Ellipsis>
@@ -113,6 +158,13 @@ export function Jetton() {
           disabled={!connected} onClick={handleClaim}>
           claim your bet
         </Button>
+        <ButtonGrid>
+          <TGButton> Done </TGButton>
+          <TGButton> Done </TGButton>
+          <Label text={"Blue da bu di"}>
+            <TextBlock> Some text </TextBlock>
+          </Label>
+        </ButtonGrid>
       </FlexBoxCol>
     </Card>
   );

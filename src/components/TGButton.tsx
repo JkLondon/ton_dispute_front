@@ -1,40 +1,35 @@
-// TGButton.tsx
-import React from 'react';
+import React from "react";
 
-interface TGButtonProps {
-	label: string;
-	iconSvgPath: string; // SVG path for the icon
-	iconViewBox: string; // viewBox attribute for the SVG element
-	onClick: () => void;
-	className?: string;
-	iconClassName?: string; // Additional classes for the icon styling if needed
-}
+type Props = {
+	mainColor?: string;
+	outline?: boolean;
+	icon?: string;
+	column?: boolean;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-const TGButton = ({
-										label,
-										iconSvgPath,
-										iconViewBox,
-										onClick,
-										className = '',
-										iconClassName = '',
-									}: TGButtonProps) => {
+export const TGButton = (props: Props) => {
+	const {
+		className,
+		outline,
+		children,
+		icon,
+		column,
+		...restProps
+	} = props;
+
 	return (
 		<button
-			onClick={onClick}
-			className={`inline-flex items-center justify-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full shadow hover:shadow-md active:bg-gray-50 focus:outline-none focus:ring focus:ring-gray-300 ${className}`}
-			style={{ borderWidth: 1, borderColor: '#d1d5db' }} // Use the exact color code for the border
+			{...restProps}
+			className={`${className} bg-telegram-bt-blue 
+        flex ${column ? "flex-col" : "flex-row"} w-full justify-center items-center cursor-pointer
+        text-telegram-white font-semibold text-sm leading-6 py-3 px-3
+        select-none transition duration-200 ease-in-out rounded-md
+        focus:outline-none focus:ring-2 focus:ring-offset-2`}
 		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox={iconViewBox}
-				className={`h-5 w-5 ${iconClassName}`} // Use the exact size for the icon
-				fill="currentColor"
-			>
-				<path fillRule="evenodd" d={iconSvgPath} clipRule="evenodd" />
-			</svg>
-			{label}
+			{icon && (
+				<i className={`mdi ${icon} inherit-color relative top-1`} />
+			)}
+			{children}
 		</button>
 	);
 };
-
-export default TGButton;
