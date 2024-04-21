@@ -10,6 +10,7 @@ import {
 } from "./styled/styled";
 import { fromNano } from "@ton/core";
 import { useState } from "react";
+import TGButton from "./TGButton";
 
 export function Jetton() {
   const {connected, wallet} = useTonConnect()
