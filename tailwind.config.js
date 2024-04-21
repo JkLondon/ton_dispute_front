@@ -15,7 +15,7 @@ export default {
 
       // Neutrals for Backgrounds and Text
       'telegram-gray': '#f7f7f7', // Very light gray for background
-      'telegram-light-gray': '#d8d8d8', // Light gray for secondary elements
+      'telegram-light-gray': '#EFEFF4', // Light gray for secondary elements
       'telegram-dark-gray': '#a0a0a0', // Medium gray for text
 
       // Alternative Colors

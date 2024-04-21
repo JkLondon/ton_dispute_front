@@ -14,6 +14,7 @@ import { TGButton } from "./TGButton";
 import {ButtonGrid} from "./ButtonGrid";
 import {TextBlock} from "./TextBlock";
 import {Label} from "./Label";
+import InputWithButton from "./InputWithButton";
 
 export function InformationBlock() {
   const {connected, wallet} = useTonConnect()
@@ -24,12 +25,12 @@ export function InformationBlock() {
   const [claimBetID, setClaimBetID] = useState(0);
 
   return (
-    <div>
-        <Label text="Wallet">
-          <TextBlock>
-            <p>{ contractAddress ? Address.parse(contractAddress as string).toString() : "Loading..."}</p>
-          </TextBlock>
-        </Label>
+    <FlexBoxCol className="gap-2">
+      <Label text="Wallet">
+        <TextBlock>
+          <p>{ contractAddress ? Address.parse(contractAddress as string).toString() : "Loading..."}</p>
+        </TextBlock>
+      </Label>
 
       <Label text="Name">
         <TextBlock>
@@ -42,18 +43,19 @@ export function InformationBlock() {
           <p>{ description }</p>
         </TextBlock>
       </Label>
-    </div>
+
+      <InputWithButton/>
+    </FlexBoxCol>
   )
 }
 
 export function ActionsBlock() {
-  <ButtonGrid>
-    <TGButton> Done </TGButton>
-    <TGButton> Done </TGButton>
-    <Label text={"Blue da bu di"}>
-      <TextBlock> Some text </TextBlock>
-    </Label>
-  </ButtonGrid>
+  return (
+    <ButtonGrid>
+      <TGButton> Done </TGButton>
+      <TGButton> Done </TGButton>
+    </ButtonGrid>
+  )
 }
 
 export function Jetton() {
@@ -93,6 +95,7 @@ export function Jetton() {
       <FlexBoxCol>
         <h3>Bet</h3>
         <InformationBlock></InformationBlock>
+        <ActionsBlock></ActionsBlock>
         <FlexBoxRow>
           Wallet
           <Ellipsis>{ contractAddress ? Address.parse(contractAddress as string).toString() : "Loading..."}</Ellipsis>
@@ -107,7 +110,7 @@ export function Jetton() {
         </FlexBoxRow>
         <FlexBoxRow>
           Voted?
-          
+
           <Ellipsis>{ isVoted ? isVoted == true ? "Yes": "No" : "Loading..."}</Ellipsis>
         </FlexBoxRow>
         <FlexBoxRow>
@@ -126,33 +129,33 @@ export function Jetton() {
           Balance
           <div>{bank ?? "Loading..."}</div>
         </FlexBoxRow>
-        <input 
-        type="number"
-        value={betOutcomeID} 
-        onChange={e => setBetOutcomeID(e.target.valueAsNumber)} 
+        <input
+          type="number"
+          value={betOutcomeID}
+          onChange={e => setBetOutcomeID(e.target.valueAsNumber)}
         />
         <Button
           disabled={!connected} onClick={handleBet}>
           Bet some ton
         </Button>
-        <input 
-        type="number"
-        value={voteOutcomeID} 
-        onChange={e => setVoteOutcomeID(e.target.valueAsNumber)} 
+        <input
+          type="number"
+          value={voteOutcomeID}
+          onChange={e => setVoteOutcomeID(e.target.valueAsNumber)}
         />
-        <input 
-        type="number"
-        value={voteRefereeID} 
-        onChange={e => setVoteRefereeID(e.target.valueAsNumber)} 
+        <input
+          type="number"
+          value={voteRefereeID}
+          onChange={e => setVoteRefereeID(e.target.valueAsNumber)}
         />
         <Button
           disabled={!connected} onClick={handleVote}>
           Vote on Outcome (paste your outcomeID and refereeID)
         </Button>
-        <input 
-        type="number"
-        value={claimBetID} 
-        onChange={e => setClaimBetID(e.target.valueAsNumber)} 
+        <input
+          type="number"
+          value={claimBetID}
+          onChange={e => setClaimBetID(e.target.valueAsNumber)}
         />
         <Button
           disabled={!connected} onClick={handleClaim}>
