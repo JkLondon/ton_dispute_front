@@ -54,11 +54,12 @@ export function BalanceActionsBlock() {
     <FlexBoxCol className="gap-4">
       <InputWithButton/>
       <ButtonGrid count={4}>
-        <TGButton> +1 </TGButton>
-        <TGButton> +5 </TGButton>
-        <TGButton> +10 </TGButton>
-        <TGButton> +20 </TGButton>
+        <TGButton inversed={true}> +1 </TGButton>
+        <TGButton inversed={true}> +5 </TGButton>
+        <TGButton inversed={true}> +10 </TGButton>
+        <TGButton inversed={true}> +20 </TGButton>
       </ButtonGrid>
+      <TGButton inversed={true}> Done </TGButton>
     </FlexBoxCol>
   )
 }
