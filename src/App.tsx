@@ -34,7 +34,7 @@ function App() {
       <div className="max-w-600px bg-gray-100">
         <FlexBoxCol>
           <Header />
-          <SearchFragment/>
+          {/*<SearchFragment/>*/}
           <DisputeFragment />
           {/*<Jetton />*/}
         </FlexBoxCol>
