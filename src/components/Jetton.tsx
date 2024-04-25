@@ -5,16 +5,15 @@ import {
   Card,
   FlexBoxCol,
   FlexBoxRow,
-  Button,
   Ellipsis,
 } from "./styled/styled";
 import { fromNano } from "@ton/core";
 import { useState } from "react";
-import { TGButton } from "./TGButton";
 import {ButtonGrid} from "./ButtonGrid";
 import {TextBlock} from "./TextBlock";
 import {Label} from "./Label";
 import InputWithButton from "./InputWithButton";
+import { Button } from "@xelene/tgui";
 
 export function InformationBlock() {
   const {connected, wallet} = useTonConnect()
@@ -54,12 +53,12 @@ export function BalanceActionsBlock() {
     <FlexBoxCol className="gap-4">
       <InputWithButton/>
       <ButtonGrid count={4}>
-        <TGButton inversed={true}> +1 </TGButton>
-        <TGButton inversed={true}> +5 </TGButton>
-        <TGButton inversed={true}> +10 </TGButton>
-        <TGButton inversed={true}> +20 </TGButton>
+        <Button> +1 </Button>
+        <Button> +5 </Button>
+        <Button> +10 </Button>
+        <Button> +20 </Button>
       </ButtonGrid>
-      <TGButton inversed={true}> Done </TGButton>
+      <Button> Done </Button>
     </FlexBoxCol>
   )
 }
@@ -67,8 +66,8 @@ export function BalanceActionsBlock() {
 export function ActionsBlock() {
   return (
     <ButtonGrid count={2}>
-      <TGButton> Done </TGButton>
-      <TGButton> Done </TGButton>
+      <Button> Done </Button>
+      <Button> Done </Button>
     </ButtonGrid>
   )
 }
@@ -178,8 +177,6 @@ export function Jetton() {
           claim your bet
         </Button>
         <ButtonGrid count={2}>
-          <TGButton> Done </TGButton>
-          <TGButton> Done </TGButton>
           <Label text={"Blue da bu di"}>
             <TextBlock> Some text </TextBlock>
           </Label>

@@ -1,25 +1,29 @@
 import "./App.css";
 import { Jetton } from "./components/Jetton";
-import { Button, FlexBoxCol, FlexBoxRow } from "./components/styled/styled";
 import { CHAIN, TonConnectButton } from "@tonconnect/ui-react";
 import { useTonConnect } from "./hooks/useTonConnect";
 import "@twa-dev/sdk"
+import {Button} from "@xelene/tgui";
+import {DisputeFragment} from "./DisputeFragment";
+import '@xelene/tgui/dist/styles.css';
+import {FlexBoxCol} from "./components/styled/styled";
+import {SearchFragment} from "./SearchFragment";
 
 function Header() {
   const {network} = useTonConnect()
 
   return (
     <div>
-      <FlexBoxRow>
+      <div className="flex flex-row, gap-8">
         <TonConnectButton/>
-        <Button>
-          {network
+        <Button mode="gray" size="l">
+          { network
             ? network === CHAIN.MAINNET
               ? "mainnet"
               : "testnet"
             : "N/A"}
         </Button>
-      </FlexBoxRow>
+      </div>
     </div>
   )
 }
@@ -27,10 +31,12 @@ function Header() {
 function App() {
 
   return (
-      <div className="max-w-800px bg-gray-100">
+      <div className="max-w-600px bg-gray-100">
         <FlexBoxCol>
           <Header />
-          <Jetton />
+          <SearchFragment/>
+          <DisputeFragment />
+          {/*<Jetton />*/}
         </FlexBoxCol>
       </div>
   );
