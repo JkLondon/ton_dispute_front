@@ -74,6 +74,9 @@ PROGRAM{
   DECLPROC $Dispute$_fun_getFees
   DECLPROC $Dispute$_fun_getIsVoteFinished
   DECLPROC $Dispute$_fun_getWinnerOutcomeID
+  DECLPROC $Dispute$_fun_getBetUntil
+  DECLPROC $Dispute$_fun_getStartedAt
+  DECLPROC $Dispute$_fun_getDuration
   DECLPROC $TimeSettings$_constructor_startedAt_duration
   DECLPROC $Dispute$_fun_getTimeSettings
   DECLPROC $Dispute$_fun_forward
@@ -104,6 +107,9 @@ PROGRAM{
   106866 DECLMETHOD %getFees
   92668 DECLMETHOD %getIsVoteFinished
   111800 DECLMETHOD %getWinnerOutcomeID
+  89098 DECLMETHOD %getBetUntil
+  115529 DECLMETHOD %getStartedAt
+  72553 DECLMETHOD %getDuration
   85089 DECLMETHOD %getTimeSettings
   113617 DECLMETHOD supported_interfaces
   121275 DECLMETHOD get_abi_ipfs
@@ -594,10 +600,10 @@ PROGRAM{
     8 LDU
     SWAP
   }>
-  $InitialState$_load PROCINLINE:<{
+  $InitialState$_load PROCREF:<{
     32 LDU
     SWAP
-    1129621790 PUSHINT
+    1149755015 PUSHINT
     EQUAL
     129 THROWIFNOT
     LDREF
@@ -609,12 +615,14 @@ PROGRAM{
     CTOS
     SWAP
     32 LDU
+    32 LDU
     LDDICT
     LDREF
     SWAP
     CTOS
     LDDICT
     DROP
+    s1 s6 XCHG
     s1 s5 XCHG
     s1 s4 XCHG
     s3 s3 s0 XCHG3
@@ -698,29 +706,31 @@ PROGRAM{
     }>
   }>
   $Dispute$_store PROCINLINE:<{
-    s14 s13 XCHG2
+    s15 s14 XCHG2
     STGRAMS
     NEWC
+    s0 s13 XCHG2
+    STSLICER
+    ENDC
     s0 s12 XCHG2
-    STSLICER
-    ENDC
+    STREF
+    NEWC
     s0 s11 XCHG2
-    STREF
-    NEWC
-    s0 s10 XCHG2
     STSLICER
     ENDC
-    s0 s9 XCHG2
+    s0 s10 XCHG2
     STREF
-    s1 s7 XCHG
+    s1 s8 XCHG
     32 STU
-    s1 s5 XCHG
+    s1 s6 XCHG
     32 STU
-    s0 s3 XCHG
+    s1 s4 XCHG
+    32 STU
+    s0 s2 XCHG
     NEWC
+    STDICT
     STDICT
     s1 s2 XCHG
-    STDICT
     8 STU
     s1 s2 XCHG
     8 STU
@@ -752,6 +762,7 @@ PROGRAM{
     SWAP
     32 LDU
     32 LDU
+    32 LDU
     LDREF
     SWAP
     CTOS
@@ -767,6 +778,7 @@ PROGRAM{
     LDIX
     LDGRAMS
     DROP
+    s9 s15 XCHG
     s9 s14 XCHG
     s9 s13 XCHG
     s9 s12 XCHG
@@ -810,7 +822,7 @@ PROGRAM{
     SWAP
     CTOS
     $InitialState$_load INLINECALLDICT
-    1 5 BLKDROP2
+    1 6 BLKDROP2
   }>
   $Dispute$_contract_init PROCREF:<{
     0 PUSHINT
@@ -879,13 +891,14 @@ PROGRAM{
       INC
     }>
     DROP
+    s8 s14 XCHG
     s8 s13 XCHG
     s8 s12 XCHG
-    s8 s11 XCHG
-    s10 s5 XCHG2
-    s8 s3 XCHG2
-    s0 s9 XCHG2
-    s0 s7 XCHG
+    s1 s11 XCHG
+    s8 s10 XCHG
+    s0 s5 XCHG
+    s9 s3 XCHG2
+    s0 s7 XCHG2
     s0 s6 XCHG
     s4 s1 s4 XCHG3
   }>
@@ -899,7 +912,7 @@ PROGRAM{
     SWAP
     IFJMP:<{
       $Dispute$_load INLINECALLDICT
-      1 14 BLKDROP2
+      1 15 BLKDROP2
     }>
     MYADDR
     11 PLDU
@@ -907,9 +920,9 @@ PROGRAM{
     EQUAL
     137 THROWIFNOT
     $Dispute$init$_load INLINECALLDICT
-    s0 s5 XCHG
+    s0 s6 XCHG
     ENDS
-    4 ROLL
+    5 ROLL
     $Dispute$_contract_init INLINECALLDICT
   }>
   $Dispute$_contract_store PROCINLINE:<{
@@ -920,7 +933,7 @@ PROGRAM{
     TRUE
     SWAP
     1 STI
-    14 -ROLL
+    15 -ROLL
     $Dispute$_store INLINECALLDICT
     ENDC
     c4 POP
@@ -1072,7 +1085,7 @@ PROGRAM{
   $SendParameters$_constructor_bounce_to_value_mode_body_code_data PROCINLINE:<{
   }>
   $Dispute$_fun_bank PROCREF:<{
-    s13 PUSH
+    s14 PUSH
     $Int$_fun_toCoinsString INLINECALLDICT
   }>
   $Dispute$_fun_outcomes PROCREF:<{
@@ -1086,10 +1099,10 @@ PROGRAM{
     $Int$_fun_toCoinsString INLINECALLDICT
   }>
   $Dispute$_fun_getName PROCREF:<{
-    s12 PUSH
+    s13 PUSH
   }>
   $Dispute$_fun_getDescription PROCREF:<{
-    s11 PUSH
+    s12 PUSH
   }>
   $Dispute$_fun_getReferees PROCREF:<{
     s8 PUSH
@@ -1109,10 +1122,19 @@ PROGRAM{
   $Dispute$_fun_getWinnerOutcomeID PROCREF:<{
     s2 PUSH
   }>
+  $Dispute$_fun_getBetUntil PROCREF:<{
+    s9 PUSH
+  }>
+  $Dispute$_fun_getStartedAt PROCREF:<{
+    s11 PUSH
+  }>
+  $Dispute$_fun_getDuration PROCREF:<{
+    s10 PUSH
+  }>
   $TimeSettings$_constructor_startedAt_duration PROCINLINE:<{
   }>
   $Dispute$_fun_getTimeSettings PROCREF:<{
-    s10 s9 PUSH2
+    s11 s10 PUSH2
     $TimeSettings$_constructor_startedAt_duration INLINECALLDICT
   }>
   $Dispute$_fun_forward PROCREF:<{
@@ -1183,20 +1205,22 @@ PROGRAM{
     s5 PUSH
     IF:<{
       B{b5ee9c7241010101001400002400000000766f74652068617320656e646564f1ed47e1} B>boc PUSHREF
-      s14 16 s() XCHG
-      5 12 REVERSE
-      s11 s15 XCHG
+      s15 17 s() XCHG
+      5 13 REVERSE
+      s12 16 s() XCHG
+      s11 17 s() XCHG
       s10 16 s() XCHG
-      s9 s15 XCHG
+      s9 17 s() XCHG
       s8 16 s() XCHG
-      s7 s15 XCHG
+      s7 17 s() XCHG
       s6 16 s() XCHG
-      s5 s15 XCHG
+      s5 17 s() XCHG
       s4 16 s() XCHG
-      s3 s15 XCHG
+      s3 17 s() XCHG
       s2 16 s() XCHG
-      s1 s15 XCHG
+      s1 17 s() XCHG
       $Dispute$_fun_reply INLINECALLDICT
+      s14 16 s() XCHG
       2 14 BLKSWAP
     }>
     s10 PUSH
@@ -1213,20 +1237,22 @@ PROGRAM{
     }>
     IF:<{
       B{b5ee9c7241010101001900002e000000006e6f7420616c6c6f77656420746f20766f7465ac571d70} B>boc PUSHREF
-      s14 16 s() XCHG
-      5 12 REVERSE
-      s11 s15 XCHG
+      s15 17 s() XCHG
+      5 13 REVERSE
+      s12 16 s() XCHG
+      s11 17 s() XCHG
       s10 16 s() XCHG
-      s9 s15 XCHG
+      s9 17 s() XCHG
       s8 16 s() XCHG
-      s7 s15 XCHG
+      s7 17 s() XCHG
       s6 16 s() XCHG
-      s5 s15 XCHG
+      s5 17 s() XCHG
       s4 16 s() XCHG
-      s3 s15 XCHG
+      s3 17 s() XCHG
       s2 16 s() XCHG
-      s1 s15 XCHG
+      s1 17 s() XCHG
       $Dispute$_fun_reply INLINECALLDICT
+      s14 16 s() XCHG
       2 14 BLKSWAP
     }>
     s10 PUSH
@@ -1241,21 +1267,23 @@ PROGRAM{
     NOT
     IF:<{
       B{b5ee9c7241010101001900002e000000006e6f7420616c6c6f77656420746f20766f7465ac571d70} B>boc PUSHREF
+      s15 18 s() XCHG
       s14 17 s() XCHG
       s13 16 s() XCHG
-      s12 s15 XCHG
+      s12 18 s() XCHG
       s11 17 s() XCHG
       s10 16 s() XCHG
-      s9 s15 XCHG
+      s9 18 s() XCHG
       s8 17 s() XCHG
       s7 16 s() XCHG
-      s6 s15 XCHG
+      s6 18 s() XCHG
       s5 17 s() XCHG
       s4 16 s() XCHG
-      s3 s15 XCHG
+      s3 18 s() XCHG
       s2 17 s() XCHG
       s1 16 s() XCHG
       $Dispute$_fun_reply INLINECALLDICT
+      s14 17 s() XCHG
       s13 16 s() XCHG
       s12 s15 XCHG
       3 12 BLKSWAP
@@ -1301,9 +1329,10 @@ PROGRAM{
         s12 s(-1) PUXC
         __tact_dict_set_int_cell INLINECALLDICT
         B{b5ee9c7241010101001b000032000000005468616e6b7320666f7220796f757220766f7465216b7f8f3f} B>boc PUSHREF
-        s14 16 s() XCHG
-        5 12 REVERSE
-        s11 s15 XCHG
+        s15 17 s() XCHG
+        5 13 REVERSE
+        s12 16 s() XCHG
+        s11 17 s() XCHG
         s10 16 s() XCHG
         s9 s8 s0 XCHG3
         s7 s6 s0 XCHG3
@@ -1321,8 +1350,8 @@ PROGRAM{
           s13 POP
           TRUE
         }>ELSE<{
-          s14 POP
-          s13 s4 PUSH2
+          16 s() POP
+          s15 s4 PUSH2
           EQUAL
           IF:<{
             s2 POP
@@ -1378,13 +1407,14 @@ PROGRAM{
           }>ELSE<{
             s14 POP
           }>
-          s0 s12 XCHG
+          s0 s14 XCHG
           s13 s13 XCHG2
         }>
       }>ELSE<{
         2DROP
         B{b5ee9c724101010100150000260000000077726f6e67206f7574636f6d65494437d0f201} B>boc PUSHREF
         $Dispute$_fun_reply INLINECALLDICT
+        s2 s14 XCHG
         s6 s13 XCHG
         s2 s12 XCHG
         s6 s11 XCHG
@@ -1400,6 +1430,7 @@ PROGRAM{
       2DROP
       B{b5ee9c7241010101001300002200000000766f74656420616c7265616479b004f982} B>boc PUSHREF
       $Dispute$_fun_reply INLINECALLDICT
+      s2 s14 XCHG
       s6 s13 XCHG
       s2 s12 XCHG
       s6 s11 XCHG
@@ -1411,6 +1442,7 @@ PROGRAM{
       s5 s1 s4 XCHG3
       s0 s1 s3 XCHG3
     }>
+    s12 s14 XCHG
     s11 s13 XCHG
     s10 s12 XCHG
     s9 s11 XCHG
@@ -1431,9 +1463,9 @@ PROGRAM{
       $Dispute$_fun_reply INLINECALLDICT
     }>
     NOW
-    s11 PUSH
+    s12 PUSH
     SUB
-    s10 PUSH
+    s11 PUSH
     GREATER
     IF:<{
       2 2 BLKDROP2
@@ -1451,21 +1483,23 @@ PROGRAM{
     0 EQINT
     IF:<{
       B{b5ee9c7241010101001800002c00000000766f746520686173206e6f7420656e646564e982fb84} B>boc PUSHREF
-      s14 s15 XCHG
-      s13 s15 XCHG
-      s12 s15 XCHG
-      s11 s15 XCHG
-      s10 s15 XCHG
-      s1 s15 XCHG
-      s1 s9 XCHG
-      s1 s8 XCHG
-      s1 s7 XCHG
-      s1 s6 XCHG
-      s1 s5 XCHG
-      s1 s4 XCHG
-      s3 s3 s0 XCHG3
+      s15 16 s() XCHG
+      s14 16 s() XCHG
+      s13 16 s() XCHG
+      s12 16 s() XCHG
+      s11 16 s() XCHG
+      s10 16 s() XCHG
+      s9 16 s() XCHG
+      s8 16 s() XCHG
+      s7 16 s() XCHG
+      s6 16 s() XCHG
+      s5 16 s() XCHG
+      s4 16 s() XCHG
+      s3 16 s() XCHG
+      s2 16 s() XCHG
+      s1 16 s() XCHG
       $Dispute$_fun_reply INLINECALLDICT
-      14 ROLL
+      15 ROLL
     }>
     s3 PUSH
     -2 EQINT
@@ -1507,6 +1541,11 @@ PROGRAM{
     s5 PUSH
     0 EQINT
     THROWANYIFNOT
+    46543 PUSHINT
+    NOW
+    s12 PUSH
+    LESS
+    THROWANYIFNOT
     s8 PUSH
     257 PUSHINT
     s2 PUSH
@@ -1532,13 +1571,13 @@ PROGRAM{
     $global_send INLINECALLDICT
     __tact_context_get INLINECALLDICT
     $Context$_get_value INLINECALLDICT
-    s1 19 s() XCHG
+    s1 20 s() XCHG
     ADD
     s9 PUSH
     INC
     __tact_context_get INLINECALLDICT
     $Context$_get_value INLINECALLDICT
-    s1 20 s() XCHG
+    s1 21 s() XCHG
     ADD
     s4 s3 s4 XCHG3
     257 PUSHINT
@@ -1554,7 +1593,7 @@ PROGRAM{
     s6 s0 s2 XC2PU
     $SendParameters$_constructor_to_body_value INLINECALLDICT
     $global_send INLINECALLDICT
-    s7 s13 XCHG
+    s7 s14 XCHG
     s4 s7 XCHG
   }>
   $Dispute$_internal_binary_WinBetDetails PROCINLINE:<{
@@ -1575,7 +1614,7 @@ PROGRAM{
     $Outcome$_not_null INLINECALLDICT
     3 1 BLKDROP2
     SWAP
-    16 s() PUSH
+    17 s() PUSH
     MUL
     100 PUSHINT
     s5 PUSH
@@ -1627,63 +1666,78 @@ PROGRAM{
   %bank PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_bank INLINECALLDICT
-    14 1 BLKDROP2
+    15 1 BLKDROP2
   }>
   %outcomes PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_outcomes INLINECALLDICT
-    14 1 BLKDROP2
+    15 1 BLKDROP2
   }>
   %winnerID PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_winnerID INLINECALLDICT
-    14 1 BLKDROP2
+    15 1 BLKDROP2
   }>
   %balance PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_balance INLINECALLDICT
-    14 1 BLKDROP2
+    15 1 BLKDROP2
   }>
   %getName PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getName INLINECALLDICT
-    14 1 BLKDROP2
+    15 1 BLKDROP2
   }>
   %getDescription PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getDescription INLINECALLDICT
-    14 1 BLKDROP2
+    15 1 BLKDROP2
   }>
   %getReferees PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getReferees INLINECALLDICT
-    14 1 BLKDROP2
+    15 1 BLKDROP2
   }>
   %getOutcomes PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getOutcomes INLINECALLDICT
-    14 1 BLKDROP2
+    15 1 BLKDROP2
   }>
   %getFees PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getFees INLINECALLDICT
-    14 2 BLKDROP2
+    15 2 BLKDROP2
     $Fees$_to_external INLINECALLDICT
   }>
   %getIsVoteFinished PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getIsVoteFinished INLINECALLDICT
-    14 1 BLKDROP2
+    15 1 BLKDROP2
   }>
   %getWinnerOutcomeID PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getWinnerOutcomeID INLINECALLDICT
-    14 1 BLKDROP2
+    15 1 BLKDROP2
+  }>
+  %getBetUntil PROC:<{
+    $Dispute$_contract_load INLINECALLDICT
+    $Dispute$_fun_getBetUntil INLINECALLDICT
+    15 1 BLKDROP2
+  }>
+  %getStartedAt PROC:<{
+    $Dispute$_contract_load INLINECALLDICT
+    $Dispute$_fun_getStartedAt INLINECALLDICT
+    15 1 BLKDROP2
+  }>
+  %getDuration PROC:<{
+    $Dispute$_contract_load INLINECALLDICT
+    $Dispute$_fun_getDuration INLINECALLDICT
+    15 1 BLKDROP2
   }>
   %getTimeSettings PROC:<{
     $Dispute$_contract_load INLINECALLDICT
     $Dispute$_fun_getTimeSettings INLINECALLDICT
-    14 2 BLKDROP2
+    15 2 BLKDROP2
     $TimeSettings$_to_external INLINECALLDICT
   }>
   supported_interfaces PROC:<{
@@ -1693,7 +1747,7 @@ PROGRAM{
     209474421377847335869795010607481022628 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d5a784a6f47684c565a694d5665706d636b7247556b5a4b664d6b346455396d694d48715362504c4c4d755776} PUSHSLICE
+    x{697066733a2f2f516d50393376474c55326d71343453583669664a5a6165514767736d385869344172427944634a7a447373627634} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -1823,7 +1877,9 @@ PROGRAM{
     s0 s2 XCHG
     __tact_context_sender SETGLOB
     $Dispute$_contract_load INLINECALLDICT
-    2 14 BLKSWAP
+    s14 16 s() XCHG
+    s13 s15 XCHG
+    2 13 BLKSWAP
     $Dispute$_contract_router_internal INLINECALLDICT
     130 THROWIFNOT
     $Dispute$_contract_store INLINECALLDICT

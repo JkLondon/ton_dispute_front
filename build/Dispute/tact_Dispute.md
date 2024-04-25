@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: Dispute
-BOC Size: 4134 bytes
+BOC Size: 4337 bytes
 
 # Types
 Total Types: 20
@@ -62,8 +62,8 @@ TLB: `player_bet_init#d29ad959 outcomeID:uint8 = PlayerBetInit`
 Signature: `PlayerBetInit{outcomeID:uint8}`
 
 ## InitialState
-TLB: `initial_state#4354a91e name:^string description:^string duration:uint32 referees:dict<int, ^Referee{address:address,voted:bool}> outcomes:dict<int, ^Outcome{id:uint8,name:^string,voted:uint8,amount:coins}> = InitialState`
-Signature: `InitialState{name:^string,description:^string,duration:uint32,referees:dict<int, ^Referee{address:address,voted:bool}>,outcomes:dict<int, ^Outcome{id:uint8,name:^string,voted:uint8,amount:coins}>}`
+TLB: `initial_state#4487de87 name:^string description:^string duration:uint32 betUntil:uint32 referees:dict<int, ^Referee{address:address,voted:bool}> outcomes:dict<int, ^Outcome{id:uint8,name:^string,voted:uint8,amount:coins}> = InitialState`
+Signature: `InitialState{name:^string,description:^string,duration:uint32,betUntil:uint32,referees:dict<int, ^Referee{address:address,voted:bool}>,outcomes:dict<int, ^Outcome{id:uint8,name:^string,voted:uint8,amount:coins}>}`
 
 ## Coin
 TLB: `_ amount:coins = Coin`
@@ -86,7 +86,7 @@ TLB: `_ startedAt:uint32 duration:uint32 = TimeSettings`
 Signature: `TimeSettings{startedAt:uint32,duration:uint32}`
 
 # Get Methods
-Total Get Methods: 12
+Total Get Methods: 15
 
 ## bank
 
@@ -109,6 +109,12 @@ Total Get Methods: 12
 ## getIsVoteFinished
 
 ## getWinnerOutcomeID
+
+## getBetUntil
+
+## getStartedAt
+
+## getDuration
 
 ## getTimeSettings
 
@@ -139,5 +145,6 @@ Total Get Methods: 12
 137: Masterchain support is not enabled for this contract
 5579: vote has ended
 37676: only child contract can call this function
+46543: betting time has ended
 53866: wrong outcomeID
 54404: Parent only

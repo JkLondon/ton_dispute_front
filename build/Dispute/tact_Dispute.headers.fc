@@ -103,7 +103,7 @@ cell $CloseWinBet$_store_cell((int) v) inline;
 (slice, ((int))) $PlayerBetInit$_load(slice sc_0) inline;
 
 ;; $InitialState$_load
-(slice, ((slice, slice, int, cell, cell))) $InitialState$_load(slice sc_0) inline;
+(slice, ((slice, slice, int, int, cell, cell))) $InitialState$_load(slice sc_0) inline_ref;
 
 ;; $Outcome$_store
 builder $Outcome$_store(builder build_0, (int, slice, int, int) v) inline;
@@ -136,10 +136,10 @@ tuple $Referee$_as_optional((slice, int) v) inline;
 tuple $Referee$_load_opt(cell cl) inline;
 
 ;; $Dispute$_store
-builder $Dispute$_store(builder build_0, (int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) v) inline;
+builder $Dispute$_store(builder build_0, (int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) v) inline;
 
 ;; $Dispute$_load
-(slice, ((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int))) $Dispute$_load(slice sc_0) inline;
+(slice, ((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int))) $Dispute$_load(slice sc_0) inline;
 
 ;; $StateInit$_not_null
 ((cell, cell)) $StateInit$_not_null(tuple v) inline;
@@ -163,16 +163,16 @@ _ $Context$_get_value((int, slice, int, slice) v) inline;
 builder $PlayerBet$init$_store(builder build_0, (slice, int) v) inline;
 
 ;; $Dispute$init$_load
-(slice, (((slice, slice, int, cell, cell)))) $Dispute$init$_load(slice sc_0) inline;
+(slice, (((slice, slice, int, int, cell, cell)))) $Dispute$init$_load(slice sc_0) inline;
 
 ;; $Dispute$_contract_init
-(int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $Dispute$_contract_init((slice, slice, int, cell, cell) $msg) impure inline_ref;
+(int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $Dispute$_contract_init((slice, slice, int, int, cell, cell) $msg) impure inline_ref;
 
 ;; $Dispute$_contract_load
-(int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $Dispute$_contract_load() impure inline_ref;
+(int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $Dispute$_contract_load() impure inline_ref;
 
 ;; $Dispute$_contract_store
-() $Dispute$_contract_store((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) v) impure inline;
+() $Dispute$_contract_store((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) v) impure inline;
 
 ;; $global_contractAddress
 slice $global_contractAddress((cell, cell) $s) impure inline;
@@ -193,55 +193,64 @@ cell $String$_fun_asComment(slice $self) impure inline_ref;
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline;
 
 ;; $Dispute$_fun_bank
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), slice) $Dispute$_fun_bank((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), slice) $Dispute$_fun_bank((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
 
 ;; $Dispute$_fun_outcomes
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), cell) $Dispute$_fun_outcomes((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), cell) $Dispute$_fun_outcomes((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
 
 ;; $Dispute$_fun_winnerID
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), int) $Dispute$_fun_winnerID((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), int) $Dispute$_fun_winnerID((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
 
 ;; $Dispute$_fun_balance
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), slice) $Dispute$_fun_balance((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), slice) $Dispute$_fun_balance((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
 
 ;; $Dispute$_fun_getName
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), slice) $Dispute$_fun_getName((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), slice) $Dispute$_fun_getName((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
 
 ;; $Dispute$_fun_getDescription
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), slice) $Dispute$_fun_getDescription((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), slice) $Dispute$_fun_getDescription((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
 
 ;; $Dispute$_fun_getReferees
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), cell) $Dispute$_fun_getReferees((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), cell) $Dispute$_fun_getReferees((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
 
 ;; $Dispute$_fun_getOutcomes
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), cell) $Dispute$_fun_getOutcomes((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), cell) $Dispute$_fun_getOutcomes((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
 
 ;; $Fees$_constructor_percent_flat
 ((int, int)) $Fees$_constructor_percent_flat(int percent, int flat) inline;
 
 ;; $Dispute$_fun_getFees
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), (int, int)) $Dispute$_fun_getFees((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), (int, int)) $Dispute$_fun_getFees((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
 
 ;; $Dispute$_fun_getIsVoteFinished
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), int) $Dispute$_fun_getIsVoteFinished((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), int) $Dispute$_fun_getIsVoteFinished((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
 
 ;; $Dispute$_fun_getWinnerOutcomeID
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), int) $Dispute$_fun_getWinnerOutcomeID((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), int) $Dispute$_fun_getWinnerOutcomeID((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+
+;; $Dispute$_fun_getBetUntil
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), int) $Dispute$_fun_getBetUntil((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+
+;; $Dispute$_fun_getStartedAt
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), int) $Dispute$_fun_getStartedAt((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+
+;; $Dispute$_fun_getDuration
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), int) $Dispute$_fun_getDuration((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
 
 ;; $TimeSettings$_constructor_startedAt_duration
 ((int, int)) $TimeSettings$_constructor_startedAt_duration(int startedAt, int duration) inline;
 
 ;; $Dispute$_fun_getTimeSettings
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), (int, int)) $Dispute$_fun_getTimeSettings((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), (int, int)) $Dispute$_fun_getTimeSettings((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self) impure inline_ref;
 
 ;; $Dispute$_fun_forward
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), ()) $Dispute$_fun_forward((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), ()) $Dispute$_fun_forward((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
 
 ;; $Dispute$_fun_reply
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), ()) $Dispute$_fun_reply((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self, cell $body) impure inline;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), ()) $Dispute$_fun_reply((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self, cell $body) impure inline;
 
 ;; $Dispute$_fun_notify
-((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int), ()) $Dispute$_fun_notify((int, slice, slice, int, int, cell, cell, int, int, int, int, int, int, int) $self, cell $body) impure inline;
+((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), ()) $Dispute$_fun_notify((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self, cell $body) impure inline;
 
 ;; $SendParameters$_constructor_to_body_value
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_body_value(slice to, cell body, int value) inline;
