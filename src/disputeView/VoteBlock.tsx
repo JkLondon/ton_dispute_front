@@ -6,7 +6,7 @@ import {Outcome} from "../../build/Dispute/tact_Dispute";
 
 type props = {
 	data: DisputeData
-	onSelect: (outcome: Outcome) => void;
+	onSelect: (outcome: bigint) => void;
 }
 
 export const VoteBlock: FC<props> = (props) => {
@@ -14,7 +14,7 @@ export const VoteBlock: FC<props> = (props) => {
 
 	const outcomeList = Array.from(outcomes).map(([key, value]) => (
 		<Cell Component="label"
-					onClick={ () => props.onSelect(value )}
+					onClick={ () => props.onSelect(key )}
 					before={
 			<Selectable name="group" value="1"/>
 		}

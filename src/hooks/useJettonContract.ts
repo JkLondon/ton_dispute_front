@@ -113,7 +113,7 @@ export function useJettonContract() {
             }
 
             disputeContract?.send(sender, {
-                value: toNano("7")
+                value: toNano("1")
             }, message)
         },
         vote: (outcomeID: bigint, refereeID: bigint) => {

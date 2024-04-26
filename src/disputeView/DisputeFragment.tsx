@@ -16,6 +16,7 @@ export type DisputeData = {
 	fees: string;
 	outcomes: Dictionary<bigint, Outcome>;
 	referees: Dictionary<bigint, Referee>;
+	bet: (outcomeId: bigint) => void;
 }
 
 function prepareDisputeData(): DisputeData | null {
@@ -36,14 +37,17 @@ function prepareDisputeData(): DisputeData | null {
 			description: description,
 			fees: feesFormatted,
 			outcomes: outcomes,
-			referees: referees
+			referees: referees,
+			bet: (outcomeId) => {
+				bet(outcomeId)
+			}
 		}
 	}
 	return null
 }
 
 export type DisputeFragmentState = {
-	selectedOutcome: Outcome | null
+	selectedOutcome: bigint | null
 	selectedAmount: number | null
 }
 
@@ -59,7 +63,7 @@ const DisputeFragment = () => {
 		console.log('DEBUG' + state);
 	}, [state.selectedOutcome]);  // Dependency array includes only 'selectedOutcome' if that's all you care to log
 
-	const handleSelect = (item: Outcome) => {
+	const handleSelect = (item: bigint) => {
 		setState(prevState => ({
 			...prevState,
 			selectedOutcome: item
@@ -80,8 +84,11 @@ const DisputeFragment = () => {
 					onSelect={(item) => handleSelect(item)}
 					data={model}
 				/>
-				<BetBlock onBet={
-
+				<BetBlock onBet={ (amount) => {
+					if (state.selectedOutcome) {
+						model.bet(state.selectedOutcome);
+					}
+				}
 				}/>
 
 				<Section header="Claim">
