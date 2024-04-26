@@ -15,7 +15,12 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <TonConnectUIProvider manifestUrl={manifestUrl}>
     <QueryClientProvider client={queryClient}>
-      <AppRoot>
+      <AppRoot
+        className="flex justify-center"
+        style={{
+          background: 'var(--tgui--secondary_bg_color)',
+          padding: "20px"
+        }}>
         <App />
       </AppRoot>
       </QueryClientProvider>

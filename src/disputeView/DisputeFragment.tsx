@@ -1,14 +1,14 @@
-import {Button, List, Section} from "@xelene/tgui";
-import {TextBlock} from "./components/TextBlock";
-import {Label} from "./components/Label";
-import {useTonConnect} from "./hooks/useTonConnect";
-import {useJettonContract} from "./hooks/useJettonContract";
-import {FC, useState} from "react";
-import InputWithButton from "./components/InputWithButton";
+import {Button, Info, List, Section, Skeleton, Spinner} from "@xelene/tgui";
+import {TextBlock} from "../components/TextBlock";
+import {Label} from "../components/Label";
+import {useTonConnect} from "../hooks/useTonConnect";
+import {useJettonContract} from "../hooks/useJettonContract";
+import {FC, ReactNode, useState} from "react";
+import InputWithButton from "../components/InputWithButton";
 import {Chip, Cell, Selectable, Radio} from "@xelene/tgui";
-import {ButtonGrid} from "./components/ButtonGrid";
+import {ButtonGrid} from "../components/ButtonGrid";
 // import Input from "./components/Input";
-import {Outcome} from "../build/Dispute/tact_Dispute";
+import {Outcome, Referee} from "../../build/Dispute/tact_Dispute";
 import {Dictionary, fromNano} from "@ton/core";
 import {Input} from "@xelene/tgui";
 
@@ -18,6 +18,7 @@ type DisputeData = {
 	description: string;
 	fees: string;
 	outcomes: Dictionary<bigint, Outcome>;
+	referees: Dictionary<bigint, Referee>;
 }
 
 function prepareDisputeData(): DisputeData | null {
@@ -29,7 +30,7 @@ function prepareDisputeData(): DisputeData | null {
 	const [voteRefereeID, setVoteRefereeID] = useState(0);
 	const [claimBetID, setClaimBetID] = useState(0);
 
-	if (wallet && name && description && fees && outcomes) {
+	if (wallet && name && description && fees && outcomes && referees) {
 		const feesFormatted = fromNano(fees.flat || 0) + ", " + fees.percent + "%";
 
 		return {
@@ -37,13 +38,20 @@ function prepareDisputeData(): DisputeData | null {
 			name: name,
 			description: description,
 			fees: feesFormatted,
-			outcomes: outcomes
+			outcomes: outcomes,
+			referees: referees
 		}
 	}
 	return null
 }
 
 const BetInfo: FC<DisputeData> = (props) => {
+	const referees = Array.from(props.referees).map(([key, value], index) => (
+		<Cell Component="label" before={(index+1).toString() + '.'}>
+			{value.address.toString()}
+		</Cell>
+	));
+
 	return (
 		<Section header="Dispute information">
 			<div className="p-4 flex flex-col gap-2.5">
@@ -71,7 +79,9 @@ const BetInfo: FC<DisputeData> = (props) => {
 					</TextBlock>
 				</Label>
 
-				<Label text="referees"> Not today </Label>
+				<Label text="Referees">
+					{ referees }
+				</Label>
 			</div>
 		</Section>
 	)
@@ -80,6 +90,7 @@ const BetInfo: FC<DisputeData> = (props) => {
 export function BetBlock() {
 	const buttonList = [1, 5, 10, 20]
 	let [value, setValue] = useState("");
+
 	const buttons = buttonList.map((curr) => (
 		<Button mode="outline" onClick={() => {
 			setValue((Number(value) + curr).toString())
@@ -96,6 +107,15 @@ export function BetBlock() {
 				value={value}
 				onChange={e => setValue(e.target.value)}
 				type='number'
+				placeholder="Your bet size"
+				after={
+					<Info
+						subtitle="Subtitle"
+						type="avatarStack"
+					>
+						TONN
+					</Info>
+				}
 			/>
 			<div className="grid grid-cols-4 gap-2.5">
 				{buttons}
@@ -128,31 +148,52 @@ const VoteBlock: FC<DisputeData> = (props) => {
 	return (<div></div>)
 }
 
-export function DisputeFragment() {
+export const RootDisputeView = () => {
+	return (
+		<List
+			style={{
+				background: 'var(--tgui--secondary_bg_color)',
+			}}
+		>
+			<DisputeFragment />
+		</List>
+		)
+}
+
+const DisputeFragment = () => {
 	const model = prepareDisputeData()
 	if (model) {
 		const outcomes = model.outcomes
 		return (
-			<List
-				className="p-10 w-300"
-				style={{
-					background: 'var(--tgui--secondary_bg_color)',
-				}}
-			>
+			<>
+				<Skeleton>
 				<BetInfo {...model}/>
+				</Skeleton>
+
 				<VoteBlock {...model}/>
 				<BetBlock/>
 
 				<Section header="Claim">
-					<Input
-						placeholder="Claim amount"
-						className="flex-grow"
-						after={
-							<Button size="s">Claim</Button>
-						}
-					/>
+					<div className="flex flex-col gap-2.5 p-4">
+						<Input
+							placeholder="Claim amount"
+							className="flex-grow"
+							after={
+								<Button size="s">Claim</Button>
+							}
+						/>
+					</div>
 				</Section>
-			</List>
+			</>
+	)
+	} else {
+		return (
+			<div
+				className="flex h-auto place-content-center"
+			>
+				<Spinner size="l"/>
+				<br/>
+			</div>
 		)
 	}
 }
