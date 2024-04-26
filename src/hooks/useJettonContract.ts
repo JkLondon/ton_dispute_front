@@ -22,7 +22,7 @@ export function useJettonContract() {
     const disputeContract = useAsyncInitialize(async()=>{
         if(!client || !wallet) return;
 
-        const contract = Dispute.fromAddress(Address.parse("kQAcg5JnNlhw3wJqutMsYHmaZqMbJGibU7yeW71nyFfwCbTO"))//"kQBEEFRthzZAtfct2pW8XG_0R-20UEH3C5MIdCCbHCNbdj2x"))
+        const contract = Dispute.fromAddress(Address.parse("EQAmqS3U5jfahc6tUpIH71a0zqSgyaUKwcCKXBmwYTilzzif"))//"kQBEEFRthzZAtfct2pW8XG_0R-20UEH3C5MIdCCbHCNbdj2x"))
 
         return client.open(contract) as OpenedContract<Dispute>
     }, [client, wallet])
@@ -93,10 +93,31 @@ export function useJettonContract() {
 
         return disputeIsVotedRaw as boolean
     }, [disputeContract, client])
-    console.log("voted? ", disputeIsVote)
 
+    const disputeStartedAt = useAsyncInitialize(async()=>{
+        if(!disputeContract || !client) return;
 
-    console.log("disp outcomes", disputeOutcomes)
+        const disputeStartedAtRaw = await disputeContract.getGetStartedAt()
+
+        return disputeStartedAtRaw as bigint
+    }, [disputeContract, client])
+    
+    const disputeDuration = useAsyncInitialize(async()=>{
+        if(!disputeContract || !client) return;
+
+        const disputeDurationRaw = await disputeContract.getGetDuration()
+
+        return disputeDurationRaw as bigint
+    }, [disputeContract, client])
+
+    const disputeBetUntil = useAsyncInitialize(async()=>{
+        if(!disputeContract || !client) return;
+
+        const disputeBetUntilRaw = await disputeContract.getGetBetUntil()
+
+        return disputeBetUntilRaw as bigint
+    }, [disputeContract, client])
+
     return {
         referees: disputeReferees ?? null,
         outcomes: disputeOutcomes ?? null,
@@ -106,6 +127,9 @@ export function useJettonContract() {
         contractAddress: disputeContract?.address?.toString() ?? null,
         fees: disputeFees ?? null,
         isVoted: disputeIsVote ?? null,
+        startedAt: disputeStartedAt ?? null,
+        duration: disputeDuration ?? null,
+        betUntil: disputeBetUntil ?? null,
         bet: (outcomeID: bigint) => {
             const message: PlayerBetInit = {
                 $$type: 'PlayerBetInit',

@@ -74,7 +74,9 @@ export function ActionsBlock() {
 
 export function Jetton() {
   const {connected, wallet} = useTonConnect()
-  const {referees, bank, name, description, bet, vote, claim, contractAddress, fees, isVoted, outcomes} = useJettonContract()
+  const {referees, bank, name, description, bet, vote, 
+    claim, contractAddress, fees, isVoted, outcomes,
+  betUntil, startedAt, duration} = useJettonContract()
   const [betOutcomeID, setBetOutcomeID] = useState(0);
   const [voteOutcomeID, setVoteOutcomeID] = useState(0);
   const [voteRefereeID, setVoteRefereeID] = useState(0);
@@ -141,6 +143,18 @@ export function Jetton() {
           <Ellipsis>{refereeList}</Ellipsis>
         </FlexBoxRow>
         <FlexBoxRow>
+          Started at
+          <Ellipsis>{ startedAt ? UnixTimeToDateString(startedAt) : "Loading..."}</Ellipsis>
+        </FlexBoxRow>
+        <FlexBoxRow>
+          Bet until:
+          <Ellipsis>{ betUntil ? UnixTimeToDateString(betUntil) : "Loading..."}</Ellipsis>
+        </FlexBoxRow>
+        <FlexBoxRow>
+          Duration
+          <Ellipsis>{ duration ? unixTimeToDurationString(Number(duration)) : "Loading..."}</Ellipsis>
+        </FlexBoxRow>
+        <FlexBoxRow>
           Balance
           <div>{bank ?? "Loading..."}</div>
         </FlexBoxRow>
@@ -184,4 +198,24 @@ export function Jetton() {
       </FlexBoxCol>
     </Card>
   );
+}
+
+
+function UnixTimeToDateString(unixTime: bigint) {
+  const date = new Date(Number(unixTime) * 1000);
+  return date.toString();
+}
+
+function unixTimeToDurationString(durationInSeconds: number) {
+  const hours = Math.floor(durationInSeconds / 3600);
+  const minutes = Math.floor((durationInSeconds % 3600) / 60);
+  const seconds = durationInSeconds % 60;
+
+  let durationString = '';
+  if (hours > 0) durationString += `${hours} hour${hours > 1 ? 's' : ''}, `;
+  if (minutes > 0) durationString += `${minutes} minute${minutes > 1 ? 's' : ''}, `;
+  if (seconds > 0) durationString += `${seconds} second${seconds > 1 ? 's' : ''}, `;
+
+  // Remove trailing comma and space
+  return durationString.slice(0, -2);
 }
