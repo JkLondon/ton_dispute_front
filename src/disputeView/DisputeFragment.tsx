@@ -16,7 +16,8 @@ export type DisputeData = {
 	fees: string;
 	outcomes: Dictionary<bigint, Outcome>;
 	referees: Dictionary<bigint, Referee>;
-	// duration: string
+	bank: string;
+	isFinished: boolean
 	bet: (outcomeId: bigint) => void;
 }
 
@@ -25,12 +26,12 @@ function prepareDisputeData(): DisputeData | null {
 	const {referees, bank, name, description, bet, vote,
 		claim, contractAddress, fees, isVoted, outcomes,
 		betUntil, startedAt, duration} = useJettonContract()
-const [betOutcomeID, setBetOutcomeID] = useState(0);
+	const [betOutcomeID, setBetOutcomeID] = useState(0);
 	const [voteOutcomeID, setVoteOutcomeID] = useState(0);
 	const [voteRefereeID, setVoteRefereeID] = useState(0);
 	const [claimBetID, setClaimBetID] = useState(0);
 
-	if (wallet && name && description && fees && outcomes && referees) {
+	if (wallet && name && description && fees && outcomes && referees && bank) {
 		const feesFormatted = fromNano(fees.flat || 0) + ", " + fees.percent + "%";
 
 		return {
@@ -40,10 +41,11 @@ const [betOutcomeID, setBetOutcomeID] = useState(0);
 			fees: feesFormatted,
 			outcomes: outcomes,
 			referees: referees,
-			// duration: duration.toString(),
+			bank: bank,
+			isFinished: true,
 			bet: (outcomeId) => {
 				bet(outcomeId)
-			}
+			},
 		}
 	}
 	return null
@@ -89,27 +91,16 @@ const DisputeFragment = () => {
 				/>
 
 				<BetBlock
+					isFinished={model.isFinished}
 					isButtonDisabled={
-						state.selectedOutcome == null && state.selectedAmount == null
+						state.selectedOutcome == null
 					}
 					onBet={ (amount) => {
-					if (state.selectedOutcome) {
-						model.bet(state.selectedOutcome);
+						if (state.selectedOutcome) {
+							model.bet(state.selectedOutcome);
+						}
 					}
-				}
-				}/>
-
-				<Section header="Claim">
-					<div className="flex flex-col gap-2.5 p-4">
-						<Input
-							placeholder="Claim amount"
-							className="flex-grow"
-							after={
-								<Button size="s">Claim</Button>
-							}
-						/>
-					</div>
-				</Section>
+					}/>
 			</>
 		)
 	} else {
@@ -133,5 +124,5 @@ export const RootDisputeView = () => {
 		>
 			<DisputeFragment />
 		</List>
-		)
+	)
 }

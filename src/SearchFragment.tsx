@@ -25,7 +25,11 @@ export function SearchFragment() {
 					>
 						{/*<Controls visible={true} buttons={['play', 'repeat', 'frame', 'debug']} />*/}
 					</Player>
-					<Input/>
+					<Input
+						placeholder='Dispute token'
+						after={
+						<Button mode="gray"> Paste </Button>
+					}/>
 					<Button onClick={ () => {
 						navigate('/ton_dispute_front/bet')
 					}

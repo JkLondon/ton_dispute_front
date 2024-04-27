@@ -41,7 +41,6 @@ function App() {
       >
       <Header />
       <BrowserRouter>
-
         <Routes>
           <Route path="/ton_dispute_front" element={<SearchFragment/>} />
           <Route path="ton_dispute_front/bet" element={<RootDisputeView />} />

@@ -5,6 +5,7 @@ import {DisputeData} from "./DisputeFragment";
 type props = {
 	onBet: (amount: number) => void
 	isButtonDisabled: boolean
+	isFinished: boolean
 }
 
 export const BetBlock: FC<props> = (props) => {
@@ -20,33 +21,50 @@ export const BetBlock: FC<props> = (props) => {
 		</Button>
 	))
 
+	const claim = (
+		<>
+			<Input
+				placeholder="Claim amount"
+				className="flex-grow"
+				after={
+					<Button size="s">Claim</Button>
+				}
+			/>
+		</>
+	)
+
+	const bet = (
+		<>
+			<Input
+				value={value}
+				onChange={e => setValue(e.target.value)}
+				type='number'
+				placeholder="Your bet size"
+				after={
+					<Info
+						subtitle="Subtitle"
+						type="avatarStack"
+					>
+						TONN
+					</Info>
+				}
+			/>
+			<div className="grid grid-cols-4 gap-2.5">
+				{buttons}
+			</div>
+			<Button
+				disabled={ props.isButtonDisabled || value == '' }
+				onClick={ () => props.onBet(Number(value)) }
+			>
+				Bet
+			</Button>
+		</>
+	)
 
 	return (
 		<Section>
 			<div className="flex flex-col gap-2.5 p-4">
-				<Input
-					value={value}
-					onChange={e => setValue(e.target.value)}
-					type='number'
-					placeholder="Your bet size"
-					after={
-						<Info
-							subtitle="Subtitle"
-							type="avatarStack"
-						>
-							TONN
-						</Info>
-					}
-				/>
-				<div className="grid grid-cols-4 gap-2.5">
-					{buttons}
-				</div>
-				<Button
-					disabled={ props.isButtonDisabled }
-					onClick={ () => props.onBet(Number(value)) }
-				>
-					Bet
-				</Button>
+				{ props.isFinished ? claim : bet }
 			</div>
 		</Section>
 	)

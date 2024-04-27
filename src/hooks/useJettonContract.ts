@@ -6,6 +6,7 @@ import { useTonClient } from "./useTonClient";
 import { useTonConnect } from "./useTonConnect";
 import { Dictionary } from "@ton/core";
 import { Claim } from "../wrappers/PlayerBet";
+import Dict = NodeJS.Dict;
 
 const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
 
@@ -163,16 +164,45 @@ export function useJettonContract() {
     }
 }
 
-interface DisputeInformation {
-    referees: Dictionary<bigint, Referee>;
-    outcomes: Dictionary<bigint, Outcome>;
-    bank: string;
-    name: string;
-    description: string;
-    contractAddress: string;
-    fees: string;
+enum UserRole {
+    Viewer,
+    Refereee,
+    OngoingDispute,
+    ClaimDispute
+}
+
+interface UserDetails {
+    wallet: string
+    balance: number
+    userRole: UserRole
 
 }
 
-export function useDisputeContract() {
+interface OutcomesDetails {
+    id: bigint
+    name: string
+    userVoted: number
+    total: number
+    coefficient: number
+}
+
+interface DisputeInformation {
+    name: string
+    description: string
+    contractAdress: string
+    referees: Dictionary<bigint, string>
+    outcomes: OutcomesDetails
+    isOngoing: boolean
+    startedDate: string
+    endDate: string
+}
+
+interface DisputeInterface {
+    disputeInformation: DisputeInformation
+    userRole: UserRole
+    userDetails: UserDetails | null
+
+    bet: (outcomeID: bigint, amount: number) => void
+    vote: (outcomeID: bigint, refereeID: bigint) => void // RefereeID publicly accessible, isn't it could be exploited?
+    claim: (betID: bigint) => void
 }
