@@ -39,6 +39,12 @@ export const BetInfo: FC<DisputeData> = (props) => {
 					</TextBlock>
 				</Label>
 
+				{/*<Label text="Duration">*/}
+				{/*	<TextBlock>*/}
+				{/*		{ props.duration }*/}
+				{/*	</TextBlock>*/}
+				{/*</Label>*/}
+
 				<Label text="Referees">
 					{ referees }
 				</Label>

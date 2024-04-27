@@ -4,6 +4,7 @@ import {DisputeData} from "./DisputeFragment";
 
 type props = {
 	onBet: (amount: number) => void
+	isButtonDisabled: boolean
 }
 
 export const BetBlock: FC<props> = (props) => {
@@ -40,7 +41,12 @@ export const BetBlock: FC<props> = (props) => {
 				<div className="grid grid-cols-4 gap-2.5">
 					{buttons}
 				</div>
-				<Button onClick={ () => props.onBet(Number(value)) }> Bet </Button>
+				<Button
+					disabled={ props.isButtonDisabled }
+					onClick={ () => props.onBet(Number(value)) }
+				>
+					Bet
+				</Button>
 			</div>
 		</Section>
 	)

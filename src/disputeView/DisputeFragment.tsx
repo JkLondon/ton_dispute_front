@@ -16,14 +16,16 @@ export type DisputeData = {
 	fees: string;
 	outcomes: Dictionary<bigint, Outcome>;
 	referees: Dictionary<bigint, Referee>;
+	// duration: string
 	bet: (outcomeId: bigint) => void;
 }
 
 function prepareDisputeData(): DisputeData | null {
 	const {connected, wallet} = useTonConnect()
-	const {referees, bank, name, description,
-		bet, vote, claim, contractAddress, fees, isVoted, outcomes} = useJettonContract()
-	const [betOutcomeID, setBetOutcomeID] = useState(0);
+	const {referees, bank, name, description, bet, vote,
+		claim, contractAddress, fees, isVoted, outcomes,
+		betUntil, startedAt, duration} = useJettonContract()
+const [betOutcomeID, setBetOutcomeID] = useState(0);
 	const [voteOutcomeID, setVoteOutcomeID] = useState(0);
 	const [voteRefereeID, setVoteRefereeID] = useState(0);
 	const [claimBetID, setClaimBetID] = useState(0);
@@ -38,6 +40,7 @@ function prepareDisputeData(): DisputeData | null {
 			fees: feesFormatted,
 			outcomes: outcomes,
 			referees: referees,
+			// duration: duration.toString(),
 			bet: (outcomeId) => {
 				bet(outcomeId)
 			}
@@ -84,7 +87,12 @@ const DisputeFragment = () => {
 					onSelect={(item) => handleSelect(item)}
 					data={model}
 				/>
-				<BetBlock onBet={ (amount) => {
+
+				<BetBlock
+					isButtonDisabled={
+						state.selectedOutcome == null && state.selectedAmount == null
+					}
+					onBet={ (amount) => {
 					if (state.selectedOutcome) {
 						model.bet(state.selectedOutcome);
 					}

@@ -162,3 +162,17 @@ export function useJettonContract() {
         },
     }
 }
+
+interface DisputeInformation {
+    referees: Dictionary<bigint, Referee>;
+    outcomes: Dictionary<bigint, Outcome>;
+    bank: string;
+    name: string;
+    description: string;
+    contractAddress: string;
+    fees: string;
+
+}
+
+export function useDisputeContract() {
+}

@@ -12,69 +12,12 @@ import { useState } from "react";
 import {ButtonGrid} from "./ButtonGrid";
 import {TextBlock} from "./TextBlock";
 import {Label} from "./Label";
-import InputWithButton from "./InputWithButton";
 import { Button } from "@xelene/tgui";
 
-export function InformationBlock() {
-  const {connected, wallet} = useTonConnect()
-  const {referees, bank, name, description, bet, vote, claim, contractAddress, fees, isVoted, outcomes} = useJettonContract()
-  const [betOutcomeID, setBetOutcomeID] = useState(0);
-  const [voteOutcomeID, setVoteOutcomeID] = useState(0);
-  const [voteRefereeID, setVoteRefereeID] = useState(0);
-  const [claimBetID, setClaimBetID] = useState(0);
-
-  return (
-    <FlexBoxCol className="gap-2">
-      <Label text="Wallet">
-        <TextBlock>
-          <p>{ contractAddress ? Address.parse(contractAddress as string).toString() : "Loading..."}</p>
-        </TextBlock>
-      </Label>
-
-      <Label text="Name">
-        <TextBlock>
-          <p>{ name }</p>
-        </TextBlock>
-      </Label>
-
-      <Label text="Description">
-        <TextBlock>
-          <p>{ description }</p>
-        </TextBlock>
-      </Label>
-
-      <InputWithButton/>
-    </FlexBoxCol>
-  )
-}
-
-export function BalanceActionsBlock() {
-  return (
-    <FlexBoxCol className="gap-4">
-      <InputWithButton/>
-      <ButtonGrid count={4}>
-        <Button> +1 </Button>
-        <Button> +5 </Button>
-        <Button> +10 </Button>
-        <Button> +20 </Button>
-      </ButtonGrid>
-      <Button> Done </Button>
-    </FlexBoxCol>
-  )
-}
-
-export function ActionsBlock() {
-  return (
-    <ButtonGrid count={2}>
-      <Button> Done </Button>
-      <Button> Done </Button>
-    </ButtonGrid>
-  )
-}
 
 export function Jetton() {
   const {connected, wallet} = useTonConnect()
-  const {referees, bank, name, description, bet, vote, 
+  const {referees, bank, name, description, bet, vote,
     claim, contractAddress, fees, isVoted, outcomes,
   betUntil, startedAt, duration} = useJettonContract()
   const [betOutcomeID, setBetOutcomeID] = useState(0);
@@ -110,9 +53,7 @@ export function Jetton() {
     <Card title="Jetton">
       <FlexBoxCol>
         <h3>Bet</h3>
-        <InformationBlock></InformationBlock>
-        <ActionsBlock></ActionsBlock>
-        <BalanceActionsBlock/>
+
         <FlexBoxRow>
           Wallet
           <Ellipsis>{ contractAddress ? Address.parse(contractAddress as string).toString() : "Loading..."}</Ellipsis>
