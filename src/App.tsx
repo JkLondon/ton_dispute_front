@@ -8,6 +8,7 @@ import { RootDisputeView } from "./disputeView/DisputeFragment";
 import '@xelene/tgui/dist/styles.css';
 import {FlexBoxCol} from "./components/styled/styled";
 import {SearchFragment} from "./SearchFragment";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 
 function Header() {
   const {network} = useTonConnect()
@@ -30,14 +31,25 @@ function App() {
 
   return (
     <div
-      style={{
-        maxWidth: '800px',
-        height: '100%'
-      }}
+      className="flex justify-center"
     >
-        <Header />
-        {/*<SearchFragment/>*/}
-        <RootDisputeView />
+      <div className="justify-start"
+        style={{
+          maxWidth: "800px",
+          width: "100vw"
+        }}
+      >
+      <Header />
+      <BrowserRouter>
+
+        <Routes>
+          <Route path="/ton_dispute_front" element={<SearchFragment/>} />
+          <Route path="ton_dispute_front/bet" element={<RootDisputeView />} />
+        </Routes>
+      </BrowserRouter>
+      </div>
+
+
     </div>
 
   );

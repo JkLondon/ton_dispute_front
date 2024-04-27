@@ -1,13 +1,15 @@
 import {Button, List, Section} from "@xelene/tgui";
 import react from "@vitejs/plugin-react";
-import InputWithButton from "./components/InputWithButton";
+import {Input} from "@xelene/tgui";
 import {Player, Controls} from "@lottiefiles/react-lottie-player";
+import {useNavigate} from "react-router-dom";
 
 export function SearchFragment() {
 
+	const navigate = useNavigate();
+
 	return (
 		<List
-			className="p-10 w-300"
 			style={{
 				background: 'var(--tgui--secondary_bg_color)',
 			}}
@@ -23,8 +25,11 @@ export function SearchFragment() {
 					>
 						{/*<Controls visible={true} buttons={['play', 'repeat', 'frame', 'debug']} />*/}
 					</Player>
-					<InputWithButton/>
-					<Button> Done </Button>
+					<Input/>
+					<Button onClick={ () => {
+						navigate('/ton_dispute_front/bet')
+					}
+					}> Done </Button>
 				</div>
 			</Section>
 		</List>
