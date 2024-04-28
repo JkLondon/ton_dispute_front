@@ -164,6 +164,7 @@ export function useJettonContract() {
     }
 }
 
+
 enum UserRole {
     Viewer,
     Refereee,
@@ -175,7 +176,6 @@ interface UserDetails {
     wallet: string
     balance: number
     userRole: UserRole
-
 }
 
 interface OutcomesDetails {

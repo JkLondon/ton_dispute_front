@@ -42,7 +42,7 @@ function prepareDisputeData(): DisputeData | null {
 			outcomes: outcomes,
 			referees: referees,
 			bank: bank,
-			isFinished: true,
+			isFinished: false,
 			bet: (outcomeId) => {
 				bet(outcomeId)
 			},
