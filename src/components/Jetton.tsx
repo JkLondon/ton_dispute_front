@@ -10,11 +10,12 @@ import {
 } from "./styled/styled";
 import { fromNano } from "@ton/core";
 import { useState } from "react";
+import { randomInt } from "crypto";
 
 export function Jetton() {
   const {connected, wallet} = useTonConnect()
   const {referees, bank, name, description, bet, vote, 
-    claim, contractAddress, fees, isVoted, outcomes,
+    claim, contractAddress, fees, isVoted, outcomes, deploy, deployedAddress,
   betUntil, startedAt, duration} = useJettonContract()
   const [betOutcomeID, setBetOutcomeID] = useState(0);
   const [voteOutcomeID, setVoteOutcomeID] = useState(0);
@@ -41,6 +42,10 @@ export function Jetton() {
     claim(BigInt(claimBetID))
   }
 
+  const handleDeploy = () => {
+    deploy(BigInt(1432243))
+  }
+
   const handleVote = () => {
     vote(BigInt(voteOutcomeID), BigInt(voteRefereeID))
   }
@@ -49,6 +54,10 @@ export function Jetton() {
     <Card title="Jetton">
       <FlexBoxCol>
         <h3>Bet</h3>
+        <Button
+          disabled={!connected} onClick={handleDeploy}>
+          deploy new at {deployedAddress}
+        </Button>
         <FlexBoxRow>
           Wallet
           <Ellipsis>{ contractAddress ? Address.parse(contractAddress as string).toString() : "Loading..."}</Ellipsis>

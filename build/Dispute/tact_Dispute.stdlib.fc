@@ -305,8 +305,8 @@ cell $String$_fun_asComment(slice $self) impure inline_ref {
     return __tact_string_builder_end($b);
 }
 
-((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), ()) $Dispute$_fun_forward((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref {
-    var (($self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat)) = $self;
+((int, int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), ()) $Dispute$_fun_forward((int, int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref {
+    var (($self'ID, $self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat)) = $self;
     var ($init) = $init;
     cell $code = null();
     cell $data = null();
@@ -322,21 +322,21 @@ cell $String$_fun_asComment(slice $self) impure inline_ref {
         if (($balanceBeforeMessage < 0)) {
             raw_reserve(0, 0);
             $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, (128 + 2), $body, $code, $data));
-            return (($self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat), ());
+            return (($self'ID, $self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat), ());
         }
     }
     $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, (64 + 2), $body, $code, $data));
-    return (($self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat), ());
+    return (($self'ID, $self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat), ());
 }
 
-((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), ()) $Dispute$_fun_reply((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self, cell $body) impure inline {
-    var (($self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat)) = $self;
-    ($self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat)~$Dispute$_fun_forward(__tact_context_get_sender(), $body, true, null());
-    return (($self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat), ());
+((int, int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), ()) $Dispute$_fun_reply((int, int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self, cell $body) impure inline {
+    var (($self'ID, $self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat)) = $self;
+    ($self'ID, $self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat)~$Dispute$_fun_forward(__tact_context_get_sender(), $body, true, null());
+    return (($self'ID, $self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat), ());
 }
 
-((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), ()) $Dispute$_fun_notify((int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self, cell $body) impure inline {
-    var (($self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat)) = $self;
-    ($self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat)~$Dispute$_fun_forward(__tact_context_get_sender(), $body, false, null());
-    return (($self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat), ());
+((int, int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int), ()) $Dispute$_fun_notify((int, int, slice, slice, int, int, int, cell, cell, int, int, int, int, int, int, int) $self, cell $body) impure inline {
+    var (($self'ID, $self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat)) = $self;
+    ($self'ID, $self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat)~$Dispute$_fun_forward(__tact_context_get_sender(), $body, false, null());
+    return (($self'ID, $self'bank, $self'name, $self'description, $self'startedAt, $self'duration, $self'betUntil, $self'referees, $self'outcomes, $self'refereeVoted, $self'refereeLength, $self'betsLength, $self'voteFinished, $self'winnerID, $self'feePercent, $self'feeFlat), ());
 }

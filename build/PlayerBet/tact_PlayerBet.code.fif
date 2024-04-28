@@ -175,18 +175,20 @@ PROGRAM{
     SWAP
   }>
   $PlayerBet$_store PROCINLINE:<{
-    s6 s5 XCHG2
+    s7 s6 XCHG2
     __tact_store_address INLINECALLDICT
-    s1 s3 XCHG
+    s1 s4 XCHG
     256 STU
+    s1 s2 XCHG
     8 STU
     SWAP
     STGRAMS
-    ROT
+    SWAP
     __tact_store_address INLINECALLDICT
     NEWC
-    ROT
+    s0 s3 XCHG2
     STGRAMS
+    1 STI
     ENDC
     SWAP
     STREF
@@ -203,11 +205,13 @@ PROGRAM{
     SWAP
     CTOS
     LDGRAMS
+    1 LDI
     DROP
-    s1 s6 XCHG
-    s1 s5 XCHG
-    s1 s4 XCHG
-    s3 s3 s0 XCHG3
+    s2 s7 XCHG
+    s2 s6 XCHG
+    s2 s5 XCHG
+    s2 s4 XCHG
+    s2 s3 XCHG
   }>
   $StateInit$_not_null PROCINLINE:<{
     DUP
@@ -229,6 +233,7 @@ PROGRAM{
     DUP
     B{b5ee9c72410101010024000043800000000000000000000000000000000000000000000000000000000000000000104aec829d} B>boc <s PUSHSLICE
     20000000 PUSHINT
+    FALSE
   }>
   $PlayerBet$_contract_load PROCREF:<{
     c4 PUSH
@@ -240,7 +245,7 @@ PROGRAM{
     SWAP
     IFJMP:<{
       $PlayerBet$_load INLINECALLDICT
-      1 6 BLKDROP2
+      1 7 BLKDROP2
     }>
     MYADDR
     11 PLDU
@@ -261,7 +266,7 @@ PROGRAM{
     TRUE
     SWAP
     1 STI
-    6 -ROLL
+    7 -ROLL
     $PlayerBet$_store INLINECALLDICT
     ENDC
     c4 POP
@@ -371,8 +376,8 @@ PROGRAM{
   $WinBetDetails$_constructor_outcomeID_amount_playerAddress_seqno PROCINLINE:<{
   }>
   $PlayerBet$_fun_details PROCREF:<{
-    s3 s2 s1 PUSH3
-    s7 PUSH
+    s4 s3 s2 PUSH3
+    s8 PUSH
     $WinBetDetails$_constructor_outcomeID_amount_playerAddress_seqno INLINECALLDICT
   }>
   $SendParameters$_constructor_bounce_to_value_mode_body_code_data PROCINLINE:<{
@@ -423,37 +428,44 @@ PROGRAM{
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
   $PlayerBet$_internal_binary_InternalSetBet PROCINLINE:<{
-    s4 POP
-    s4 POP
-    s4 POP
+    s5 POP
+    s5 POP
+    s5 POP
     54404 PUSHINT
     __tact_context_get_sender INLINECALLDICT
-    s7 s(-1) PUXC
+    s8 s(-1) PUXC
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
   }>
   $PlayerBet$_internal_binary_CloseWinBet PROCINLINE:<{
     54404 PUSHINT
     __tact_context_get_sender INLINECALLDICT
-    s8 s(-1) PUXC
+    s9 s(-1) PUXC
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
-    s4 s(-1) PUXC
+    59700 PUSHINT
+    s0 s2 XCHG
+    NOT
+    s1 s2 XCHG
+    THROWANYIFNOT
+    s4 PUSH
+    TRUE
+    s0 s2 XCHG
     EQUAL
     IF:<{
       0 PUSHINT
       FALSE
       130 PUSHINT
-      s6 s5 s4 PUSH3
-      s10 PUSH
+      s7 s6 s5 PUSH3
+      s11 PUSH
       $WinBetDetails$_constructor_outcomeID_amount_playerAddress_seqno INLINECALLDICT
       $WinBetDetails$_store_cell INLINECALLDICT
-      s9 PUSH
+      s10 PUSH
       4 -ROLL
       $SendParameters$_constructor_to_value_bounce_mode_body INLINECALLDICT
       $global_send INLINECALLDICT
     }>ELSE<{
-      s5 PUSH
+      s6 PUSH
       0 PUSHINT
       FALSE
       130 PUSHINT
@@ -464,17 +476,22 @@ PROGRAM{
   $PlayerBet$_internal_text_d0f0205aa0389a00cb7163deb0e77dd6ab32de3b157af7206769e0378ef15582 PROCINLINE:<{
     54404 PUSHINT
     __tact_context_get_sender INLINECALLDICT
-    s7 s(-1) PUXC
+    s8 s(-1) PUXC
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
+    59700 PUSHINT
+    SWAP
+    NOT
+    THROWANYIFNOT
+    TRUE
     0 PUSHINT
     FALSE
     130 PUSHINT
-    s6 s5 s4 PUSH3
-    s10 PUSH
+    s7 s6 s5 PUSH3
+    s11 PUSH
     $DrawBetDetails$_constructor_outcomeID_amount_playerAddress_seqno INLINECALLDICT
     $DrawBetDetails$_store_cell INLINECALLDICT
-    s9 PUSH
+    s10 PUSH
     4 -ROLL
     $SendParameters$_constructor_to_value_bounce_mode_body INLINECALLDICT
     $global_send INLINECALLDICT
@@ -487,7 +504,7 @@ PROGRAM{
   %details PROC:<{
     $PlayerBet$_contract_load INLINECALLDICT
     $PlayerBet$_fun_details INLINECALLDICT
-    6 4 BLKDROP2
+    7 4 BLKDROP2
     $WinBetDetails$_to_external INLINECALLDICT
   }>
   supported_interfaces PROC:<{
@@ -497,7 +514,7 @@ PROGRAM{
     209474421377847335869795010607481022628 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d56454134654c52694a59586565433274755a3169636f6b456b6d4e4a6150374a7a675a5835624e4a32415954} PUSHSLICE
+    x{697066733a2f2f516d584557524e76367944363941507259767a4150584a34487665705233314341383359574c4e6b4c6254337162} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -586,7 +603,7 @@ PROGRAM{
     s0 s2 XCHG
     __tact_context_sender SETGLOB
     $PlayerBet$_contract_load INLINECALLDICT
-    2 6 BLKSWAP
+    2 7 BLKSWAP
     $PlayerBet$_contract_router_internal INLINECALLDICT
     130 THROWIFNOT
     $PlayerBet$_contract_store INLINECALLDICT

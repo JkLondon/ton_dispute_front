@@ -11,56 +11,60 @@
 ;; Contract PlayerBet functions
 ;;
 
-(slice, int, int, int, slice, int) $PlayerBet$_contract_init(slice $parent, int $seqno) impure inline_ref {
-    var (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal)) = (null(), null(), 0, 0, __gen_slice_address_61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c(), 20000000);
+(slice, int, int, int, slice, int, int) $PlayerBet$_contract_init(slice $parent, int $seqno) impure inline_ref {
+    var (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed)) = (null(), null(), 0, 0, __gen_slice_address_61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c(), 20000000, false);
     $self'parent = $parent;
     $self'seqno = $seqno;
-    return ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal);
+    return ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed);
 }
 
-((slice, int, int, int, slice, int), (int, int, slice, int)) $PlayerBet$_fun_details((slice, int, int, int, slice, int) $self) impure inline_ref {
-    var (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal)) = $self;
-    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal), $WinBetDetails$_constructor_outcomeID_amount_playerAddress_seqno($self'outcomeID, $self'amount, $self'playerAddress, $self'seqno));
+((slice, int, int, int, slice, int, int), (int, int, slice, int)) $PlayerBet$_fun_details((slice, int, int, int, slice, int, int) $self) impure inline_ref {
+    var (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed)) = $self;
+    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed), $WinBetDetails$_constructor_outcomeID_amount_playerAddress_seqno($self'outcomeID, $self'amount, $self'playerAddress, $self'seqno));
 }
 
 ;;
 ;; Receivers of a Contract PlayerBet
 ;;
 
-(((slice, int, int, int, slice, int)), ()) $PlayerBet$_internal_binary_InternalSetBet((slice, int, int, int, slice, int) $self, (int, int, slice) $msg) impure inline {
-    var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal) = $self;
+(((slice, int, int, int, slice, int, int)), ()) $PlayerBet$_internal_binary_InternalSetBet((slice, int, int, int, slice, int, int) $self, (int, int, slice) $msg) impure inline {
+    var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed) = $self;
     var ($msg'outcomeID, $msg'amount, $msg'playerAddress) = $msg;
     throw_unless(54404, ( __tact_slice_eq_bits($self'parent, __tact_context_get_sender()) ));
     $self'outcomeID = $msg'outcomeID;
     $self'amount = $msg'amount;
     $self'playerAddress = $msg'playerAddress;
-    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal), ());
+    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed), ());
 }
 
-(((slice, int, int, int, slice, int)), ()) $PlayerBet$_internal_binary_CloseWinBet((slice, int, int, int, slice, int) $self, (int) $msg) impure inline {
-    var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal) = $self;
+(((slice, int, int, int, slice, int, int)), ()) $PlayerBet$_internal_binary_CloseWinBet((slice, int, int, int, slice, int, int) $self, (int) $msg) impure inline {
+    var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed) = $self;
     var ($msg'outcomeID) = $msg;
     throw_unless(54404, ( __tact_slice_eq_bits($self'parent, __tact_context_get_sender()) ));
+    throw_unless(59700, (~ $self'payed));
+    $self'payed = true;
     if (($self'outcomeID == $msg'outcomeID)) {
         $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'parent, 0, false, (128 + 2), $WinBetDetails$_store_cell($WinBetDetails$_constructor_outcomeID_amount_playerAddress_seqno($self'outcomeID, $self'amount, $self'playerAddress, $self'seqno))));
     } else {
         $global_send($SendParameters$_constructor_to_value_bounce_mode($self'parent, 0, false, (128 + 2)));
     }
-    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal), ());
+    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed), ());
 }
 
-((slice, int, int, int, slice, int), ()) $PlayerBet$_internal_text_d0f0205aa0389a00cb7163deb0e77dd6ab32de3b157af7206769e0378ef15582((slice, int, int, int, slice, int) $self) impure inline {
-    var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal) = $self;
+((slice, int, int, int, slice, int, int), ()) $PlayerBet$_internal_text_d0f0205aa0389a00cb7163deb0e77dd6ab32de3b157af7206769e0378ef15582((slice, int, int, int, slice, int, int) $self) impure inline {
+    var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed) = $self;
     throw_unless(54404, ( __tact_slice_eq_bits($self'parent, __tact_context_get_sender()) ));
+    throw_unless(59700, (~ $self'payed));
+    $self'payed = true;
     $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'parent, 0, false, (128 + 2), $DrawBetDetails$_store_cell($DrawBetDetails$_constructor_outcomeID_amount_playerAddress_seqno($self'outcomeID, $self'amount, $self'playerAddress, $self'seqno))));
-    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal), ());
+    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed), ());
 }
 
-(((slice, int, int, int, slice, int)), ()) $PlayerBet$_internal_binary_Deploy((slice, int, int, int, slice, int) $self, (int) $deploy) impure inline {
-    var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal) = $self;
+(((slice, int, int, int, slice, int, int)), ()) $PlayerBet$_internal_binary_Deploy((slice, int, int, int, slice, int, int) $self, (int) $deploy) impure inline {
+    var ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed) = $self;
     var ($deploy'queryId) = $deploy;
-    ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal)~$PlayerBet$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
-    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal), ());
+    ($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed)~$PlayerBet$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'parent, $self'seqno, $self'outcomeID, $self'amount, $self'playerAddress, $self'tonMinimal, $self'payed), ());
 }
 
 ;;
@@ -83,7 +87,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmVEA4eLRiJYXeeC2tuZ1icokEkmNJaP7JzgZX5bNJ2AYT";
+    return "ipfs://QmXEWRNv6yD69APrYvzAPXJ4HvepR31CA83YWLNkLbT3qb";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -94,7 +98,7 @@ _ lazy_deployment_completed() method_id {
 ;; Routing of a Contract PlayerBet
 ;;
 
-((slice, int, int, int, slice, int), int) $PlayerBet$_contract_router_internal((slice, int, int, int, slice, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+((slice, int, int, int, slice, int, int), int) $PlayerBet$_contract_router_internal((slice, int, int, int, slice, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
     ;; Handle bounced messages
     if (msg_bounced) {
         return (self, true);

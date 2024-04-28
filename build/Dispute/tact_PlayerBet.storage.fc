@@ -142,8 +142,8 @@ cell $DrawBetDetails$_store_cell((int, int, slice, int) v) inline {
 ;; Type: PlayerBet
 ;;
 
-builder $PlayerBet$_store(builder build_0, (slice, int, int, int, slice, int) v) inline {
-    var (v'parent, v'seqno, v'outcomeID, v'amount, v'playerAddress, v'tonMinimal) = v;
+builder $PlayerBet$_store(builder build_0, (slice, int, int, int, slice, int, int) v) inline {
+    var (v'parent, v'seqno, v'outcomeID, v'amount, v'playerAddress, v'tonMinimal, v'payed) = v;
     build_0 = __tact_store_address(build_0, v'parent);
     build_0 = build_0.store_uint(v'seqno, 256);
     build_0 = build_0.store_uint(v'outcomeID, 8);
@@ -151,11 +151,12 @@ builder $PlayerBet$_store(builder build_0, (slice, int, int, int, slice, int) v)
     build_0 = __tact_store_address(build_0, v'playerAddress);
     var build_1 = begin_cell();
     build_1 = build_1.store_coins(v'tonMinimal);
+    build_1 = build_1.store_int(v'payed, 1);
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-(slice, ((slice, int, int, int, slice, int))) $PlayerBet$_load(slice sc_0) inline {
+(slice, ((slice, int, int, int, slice, int, int))) $PlayerBet$_load(slice sc_0) inline {
     var v'parent = sc_0~__tact_load_address();
     var v'seqno = sc_0~load_uint(256);
     var v'outcomeID = sc_0~load_uint(8);
@@ -163,7 +164,8 @@ builder $PlayerBet$_store(builder build_0, (slice, int, int, int, slice, int) v)
     var v'playerAddress = sc_0~__tact_load_address();
     slice sc_1 = sc_0~load_ref().begin_parse();
     var v'tonMinimal = sc_1~load_coins();
-    return (sc_0, (v'parent, v'seqno, v'outcomeID, v'amount, v'playerAddress, v'tonMinimal));
+    var v'payed = sc_1~load_int(1);
+    return (sc_0, (v'parent, v'seqno, v'outcomeID, v'amount, v'playerAddress, v'tonMinimal, v'payed));
 }
 
 (slice, ((slice, int))) $PlayerBet$init$_load(slice sc_0) inline {
@@ -172,7 +174,7 @@ builder $PlayerBet$_store(builder build_0, (slice, int, int, int, slice, int) v)
     return (sc_0, (v'parent, v'seqno));
 }
 
-(slice, int, int, int, slice, int) $PlayerBet$_contract_load() impure inline_ref {
+(slice, int, int, int, slice, int, int) $PlayerBet$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -187,7 +189,7 @@ builder $PlayerBet$_store(builder build_0, (slice, int, int, int, slice, int) v)
     }
 }
 
-() $PlayerBet$_contract_store((slice, int, int, int, slice, int) v) impure inline {
+() $PlayerBet$_contract_store((slice, int, int, int, slice, int, int) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

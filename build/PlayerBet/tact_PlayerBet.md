@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: PlayerBet
-BOC Size: 1230 bytes
+BOC Size: 1261 bytes
 
 # Types
-Total Types: 12
+Total Types: 11
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -49,10 +49,6 @@ Signature: `CloseWinBet{outcomeID:uint8}`
 TLB: `close_draw_bet#abb083de id:uint8 = CloseDrawBet`
 Signature: `CloseDrawBet{id:uint8}`
 
-## Claim
-TLB: `claim#acefa33d seqno:uint256 = Claim`
-Signature: `Claim{seqno:uint256}`
-
 # Get Methods
 Total Get Methods: 1
 
@@ -84,3 +80,4 @@ Total Get Methods: 1
 136: Invalid address
 137: Masterchain support is not enabled for this contract
 54404: Parent only
+59700: Already payed

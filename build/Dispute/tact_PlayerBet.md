@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: PlayerBet
-BOC Size: 1230 bytes
+BOC Size: 1261 bytes
 
 # Types
 Total Types: 20
@@ -62,8 +62,8 @@ TLB: `player_bet_init#d29ad959 outcomeID:uint8 = PlayerBetInit`
 Signature: `PlayerBetInit{outcomeID:uint8}`
 
 ## InitialState
-TLB: `initial_state#4487de87 name:^string description:^string duration:uint32 betUntil:uint32 referees:dict<int, ^Referee{address:address,voted:bool}> outcomes:dict<int, ^Outcome{id:uint8,name:^string,voted:uint8,amount:coins}> = InitialState`
-Signature: `InitialState{name:^string,description:^string,duration:uint32,betUntil:uint32,referees:dict<int, ^Referee{address:address,voted:bool}>,outcomes:dict<int, ^Outcome{id:uint8,name:^string,voted:uint8,amount:coins}>}`
+TLB: `initial_state#068ba570 ID:uint256 name:^string description:^string duration:uint32 betUntil:uint32 referees:dict<int, ^Referee{address:address,voted:bool}> outcomes:dict<int, ^Outcome{id:uint8,name:^string,voted:uint8,amount:coins}> = InitialState`
+Signature: `InitialState{ID:uint256,name:^string,description:^string,duration:uint32,betUntil:uint32,referees:dict<int, ^Referee{address:address,voted:bool}>,outcomes:dict<int, ^Outcome{id:uint8,name:^string,voted:uint8,amount:coins}>}`
 
 ## Coin
 TLB: `_ amount:coins = Coin`
@@ -120,3 +120,4 @@ Total Get Methods: 1
 46543: betting time has ended
 53866: wrong outcomeID
 54404: Parent only
+59700: Already payed

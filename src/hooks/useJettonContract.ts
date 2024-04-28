@@ -6,6 +6,7 @@ import { useTonClient } from "./useTonClient";
 import { useTonConnect } from "./useTonConnect";
 import { Dictionary } from "@ton/core";
 import { Claim } from "../wrappers/PlayerBet";
+import { randomInt } from "crypto";
 
 const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
 
@@ -48,6 +49,44 @@ export function useJettonContract() {
         getBank()
 
     }, [disputeContract])
+
+    const disputeDeploy = useAsyncInitialize(async()=>{
+        if(!client || !wallet) return;
+
+        let refereesNew = Dictionary.empty<bigint, Referee>();
+        refereesNew.set(0n, {
+            $$type: 'Referee',
+            address: Address.parse('kQCZNRSjPFwCYVBGs76MyXN2iDzRhjhvOeGTeJY513uPyvZw'),
+            voted: false
+        });
+        let outcomesNew = Dictionary.empty<bigint, Outcome>();
+        outcomesNew.set(0n, {
+            $$type: 'Outcome',
+            id: 0n,
+            name: 'Больше 50',
+            voted: 0n,
+            amount: 0n
+        });
+        outcomesNew.set(1n, {
+            $$type: 'Outcome',
+            id: 1n,
+            name: 'Меньше 50',
+            voted: 0n,
+            amount: 0n
+        });
+        const dispute = client.open(await Dispute.fromInit({
+            $$type: 'InitialState',
+            ID: BigInt(234234), //here gen random uint256 in order to avoid collisions
+            name: 'Выпадет ли судье на random.org число больше 50 (от 1 до 100). v3 Попытка 1',
+            description: 'Судья с помощью сайта random.org определит победителя.',
+            betUntil: toUnixTime('2024-06-01T00:00:00Z'),
+            referees: refereesNew,
+            outcomes: outcomesNew,
+            duration: 60n * 60n * 24n * 7n,
+        }))
+
+        return dispute as OpenedContract<Dispute>
+    }, [client, wallet])
 
     const disputeReferees = useAsyncInitialize(async()=>{
         if(!disputeContract || !client)  return
@@ -130,6 +169,7 @@ export function useJettonContract() {
         startedAt: disputeStartedAt ?? null,
         duration: disputeDuration ?? null,
         betUntil: disputeBetUntil ?? null,
+        deployedAddress: disputeDeploy?.address?.toString() ?? null,
         bet: (outcomeID: bigint) => {
             const message: PlayerBetInit = {
                 $$type: 'PlayerBetInit',
@@ -160,5 +200,19 @@ export function useJettonContract() {
                 value: toNano("0.5")
             }, message)
         },
-    }
+
+        deploy: (queryId: bigint) => {
+            disputeDeploy?.send(sender, {
+                    value: toNano("0.2")
+                }, {
+                    $$type: 'Deploy',
+                    queryId: queryId
+                })
+            }
+        }
+}
+
+function toUnixTime(dateString: string) {
+    const date = new Date(dateString);
+    return BigInt(Math.floor(date.getTime() / 1000));
 }
