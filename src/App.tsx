@@ -1,49 +1,56 @@
 import "./App.css";
 import { Jetton } from "./components/Jetton";
-import styled from "styled-components";
-import { Button, FlexBoxCol, FlexBoxRow } from "./components/styled/styled";
 import { CHAIN, TonConnectButton } from "@tonconnect/ui-react";
 import { useTonConnect } from "./hooks/useTonConnect";
 import "@twa-dev/sdk"
+import {Button} from "@xelene/tgui";
+import { RootDisputeView } from "./disputeView/DisputeFragment";
+import '@xelene/tgui/dist/styles.css';
+import {FlexBoxCol} from "./components/styled/styled";
+import {SearchFragment} from "./SearchFragment";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 
-const StyledApp = styled.div`
-  background-color: #e8e8e8;
-  color: black;
-
-  @media (prefers-color-scheme: dark) {
-    background-color: #222;
-    color: white;
-  }
-  min-height: 100vh;
-  padding: 20px 20px;
-`;
-
-const AppContainer = styled.div`
-  max-width: 900px;
-  margin: 0 auto;
-`;
-
-function App() {
+function Header() {
   const {network} = useTonConnect()
 
   return (
-    <StyledApp>
-      <AppContainer>
-        <FlexBoxCol>
-          <FlexBoxRow>
-            <TonConnectButton/>
-            <Button>
-              {network
-                ? network === CHAIN.MAINNET
-                  ? "mainnet"
-                  : "testnet"
-                : "N/A"}
-            </Button>
-          </FlexBoxRow>
-          <Jetton />
-        </FlexBoxCol>
-      </AppContainer>
-    </StyledApp>
+    <div className="flex flex-row gap-8 p-4 ">
+      <TonConnectButton/>
+      <Button size="l">
+        { network
+          ? network === CHAIN.MAINNET
+            ? "mainnet"
+            : "testnet"
+          : "N/A"}
+      </Button>
+    </div>
+  )
+}
+
+function App() {
+
+  return (
+    <div
+      className="flex justify-center"
+    >
+      <div className="justify-start"
+        style={{
+          maxWidth: "800px",
+          width: "100vw"
+        }}
+      >
+      <Header />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/ton_dispute_front" element={<SearchFragment/>} />
+          <Route path="ton_dispute_front/bet" element={<RootDisputeView />} />
+        </Routes>
+      </BrowserRouter>
+      </div>
+
+
+    </div>
+
   );
 }
 

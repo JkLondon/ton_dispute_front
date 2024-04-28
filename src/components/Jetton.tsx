@@ -5,15 +5,19 @@ import {
   Card,
   FlexBoxCol,
   FlexBoxRow,
-  Button,
   Ellipsis,
 } from "./styled/styled";
 import { fromNano } from "@ton/core";
 import { useState } from "react";
+import {ButtonGrid} from "./ButtonGrid";
+import {TextBlock} from "./TextBlock";
+import {Label} from "./Label";
+import { Button } from "@xelene/tgui";
+
 
 export function Jetton() {
   const {connected, wallet} = useTonConnect()
-  const {referees, bank, name, description, bet, vote, 
+  const {referees, bank, name, description, bet, vote,
     claim, contractAddress, fees, isVoted, outcomes,
   betUntil, startedAt, duration} = useJettonContract()
   const [betOutcomeID, setBetOutcomeID] = useState(0);
@@ -49,6 +53,7 @@ export function Jetton() {
     <Card title="Jetton">
       <FlexBoxCol>
         <h3>Bet</h3>
+
         <FlexBoxRow>
           Wallet
           <Ellipsis>{ contractAddress ? Address.parse(contractAddress as string).toString() : "Loading..."}</Ellipsis>
@@ -63,7 +68,7 @@ export function Jetton() {
         </FlexBoxRow>
         <FlexBoxRow>
           Voted?
-          
+
           <Ellipsis>{ isVoted ? isVoted == true ? "Yes": "No" : "Loading..."}</Ellipsis>
         </FlexBoxRow>
         <FlexBoxRow>
@@ -94,38 +99,43 @@ export function Jetton() {
           Balance
           <div>{bank ?? "Loading..."}</div>
         </FlexBoxRow>
-        <input 
-        type="number"
-        value={betOutcomeID} 
-        onChange={e => setBetOutcomeID(e.target.valueAsNumber)} 
+        <input
+          type="number"
+          value={betOutcomeID}
+          onChange={e => setBetOutcomeID(e.target.valueAsNumber)}
         />
         <Button
           disabled={!connected} onClick={handleBet}>
           Bet some ton
         </Button>
-        <input 
-        type="number"
-        value={voteOutcomeID} 
-        onChange={e => setVoteOutcomeID(e.target.valueAsNumber)} 
+        <input
+          type="number"
+          value={voteOutcomeID}
+          onChange={e => setVoteOutcomeID(e.target.valueAsNumber)}
         />
-        <input 
-        type="number"
-        value={voteRefereeID} 
-        onChange={e => setVoteRefereeID(e.target.valueAsNumber)} 
+        <input
+          type="number"
+          value={voteRefereeID}
+          onChange={e => setVoteRefereeID(e.target.valueAsNumber)}
         />
         <Button
           disabled={!connected} onClick={handleVote}>
           Vote on Outcome (paste your outcomeID and refereeID)
         </Button>
-        <input 
-        type="number"
-        value={claimBetID} 
-        onChange={e => setClaimBetID(e.target.valueAsNumber)} 
+        <input
+          type="number"
+          value={claimBetID}
+          onChange={e => setClaimBetID(e.target.valueAsNumber)}
         />
         <Button
           disabled={!connected} onClick={handleClaim}>
           claim your bet
         </Button>
+        <ButtonGrid count={2}>
+          <Label text={"Blue da bu di"}>
+            <TextBlock> Some text </TextBlock>
+          </Label>
+        </ButtonGrid>
       </FlexBoxCol>
     </Card>
   );
